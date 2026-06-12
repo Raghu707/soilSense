@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import crypto from "crypto";
 import dotenv from "dotenv";
-import { getAllSensors } from "../controllers/sensorController.js";
+
 import RawSensorReading from "../models/RawSensorReading.js";
 import Sensor from "../models/Sensor.js";
 
@@ -124,16 +124,6 @@ router.get("/readings", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-export const getAllSensors = async (req, res) => {
-  try {
-    const sensors = await Sensor.find().sort({ createdAt: -1 });
-    res.json(sensors);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-router.get("/", getAllSensors);
 
 
 export default router;
