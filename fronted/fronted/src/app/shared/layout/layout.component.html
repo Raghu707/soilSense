@@ -1,0 +1,63 @@
+<div class="layout">
+
+  <!-- ✅ MOBILE HEADER -->
+  <div class="mobile-header">
+    <button (click)="toggleSidebar()">☰</button>
+    <span>SoilSense</span>
+  </div>
+
+  <!-- ✅ SIDEBAR -->
+  <div class="sidebar" [class.open]="isSidebarOpen">
+
+    <div class="top">
+      <div class="logo">🌱 SoilSense</div>
+
+      <ul>
+        <li *ngFor="let item of menu">
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="closeSidebar()"
+          >
+            {{ item.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ✅ USER + ACTIONS -->
+    <div class="bottom">
+
+      <div class="profile-info" (click)="goToProfile()">
+        <div class="profile-circle">
+          {{ name.charAt(0) }}
+        </div>
+
+        <div class="text">
+          <p><b>{{ name }}</b></p>
+          <small>{{ role }}</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button (click)="goToProfile()">View Profile</button>
+        <button class="logout" (click)="logout()">Logout</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ✅ OVERLAY -->
+  <div
+    class="overlay"
+    *ngIf="isSidebarOpen"
+    (click)="closeSidebar()">
+  </div>
+
+  <!-- ✅ MAIN CONTENT -->
+  <div class="main">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

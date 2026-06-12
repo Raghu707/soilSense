@@ -1,0 +1,77 @@
+<div class="container">
+
+  <h2>🌱 New Observation</h2>
+  <p class="subtitle">Record field conditions and fetch live sensor data</p>
+
+  <!-- TOP -->
+  <div class="grid">
+    <div>
+      <label>Project</label>
+      <input [value]="project" disabled>
+    </div>
+
+    <div>
+      <label>Date</label>
+      <input [value]="today | date:'short'" disabled>
+    </div>
+  </div>
+
+  <!-- LOCATION -->
+  <label>Location</label>
+  <input [(ngModel)]="location" placeholder="Plot A-3">
+
+  <!-- WEATHER -->
+  <label>Weather</label>
+  <div class="weather">
+    <button (click)="weather='Sunny'" [class.active]="weather==='Sunny'">☀️</button>
+    <button (click)="weather='Cloudy'" [class.active]="weather==='Cloudy'">☁️</button>
+    <button (click)="weather='Rain'" [class.active]="weather==='Rain'">🌧️</button>
+    <button (click)="weather='Snow'" [class.active]="weather==='Snow'">❄️</button>
+  </div>
+
+  <!-- WIND -->
+  <label>Wind</label>
+  <select [(ngModel)]="wind">
+    <option value="Calm">🌿 Calm</option>
+    <option value="Strong">💨 Strong</option>
+  </select>
+
+  <!-- SENSOR -->
+  <div class="sensor-box">
+
+    <div class="sensor-header">
+      <span>📡 Sensor Reading</span>
+      <button (click)="fetchSensor()">
+        {{ loading ? 'Loading...' : 'Fetch Sensor' }}
+      </button>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <p>💧 Humidity</p>
+        <h3>{{ sensor.humidity ?? '--' }}%</h3>
+      </div>
+
+      <div class="card">
+        <p>🌡️ Temperature</p>
+        <h3>{{ sensor.temperatureC ?? '--' }}°C</h3>
+      </div>
+
+      <div class="card">
+        <p>🔋 Battery</p>
+        <h3>{{ sensor.battery ?? '--' }}%</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOTES -->
+  <label>Notes</label>
+  <textarea [(ngModel)]="notes"></textarea>
+
+  <!-- ACTION -->
+  <div class="actions">
+    <button class="save" (click)="save()">✅ Save</button>
+  </div>
+
+</div>

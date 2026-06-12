@@ -1,0 +1,46 @@
+<div class="layout"><div class SIDEBAR -->
+  <div class="sidebar">
+    <h2>SoilSense</h2>
+
+    <ul>
+      <li class="active">Dashboard</li>
+      <li routerLink="/projects">Projects</li>
+      <li>Users</li>
+      <li>Overview</li>
+    </ul>
+
+    <button class="logout" (click)="logout()">Logout</button>
+  </div>
+
+
+  <!-- ✅ MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <h2>Welcome Professor {{ name }}</h2>
+    </div>
+
+    <!-- ✅ CONTENT -->
+    <div class="content">
+
+      <div class="card">
+        <h3>All Projects</h3>
+        <p>Manage all active projects</p>
+      </div>
+
+      <div class="card">
+        <h3>Manage Users</h3>
+        <p>View students and supervisors</p>
+      </div>
+
+      <div class="card">
+        <h3>System Overview</h3>
+        <p>Monitor sensor and observation data</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

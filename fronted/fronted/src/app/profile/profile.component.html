@@ -1,0 +1,57 @@
+<div class="profile-container">
+
+  <h2>Profile</h2>
+  <p>Your account and project assignment details.</p>
+
+  <div class="grid">
+
+    <!-- ✅ LEFT CARD -->
+    <div class="card left">
+
+      <div class="circle">
+        {{ name.charAt(0) }}
+      </div>
+
+      <h3>{{ name }}</h3>
+
+      <span class="badge active">Active</span>
+
+      <button>Edit Profile</button>
+      <button>Change Password</button>
+      <button class="logout" (click)="logout()">Sign out</button>
+
+    </div>
+
+    <!-- ✅ RIGHT CARD -->
+    <div class="card right">
+
+      <!-- ACCOUNT -->
+      <h4>ACCOUNT</h4>
+      <p><b>Full Name:</b> {{ name }}</p>
+      <p><b>Email:</b> {{ email }}</p>
+
+      <!-- ✅ Show Seminar only for student -->
+      <p *ngIf="role === 'student'">
+        <b>Seminar Number:</b> {{ seminar }}
+      </p>
+
+      <!-- ✅ PROJECT -->
+      <h4>PROJECT ASSIGNMENT</h4>
+
+      <p><b>Project:</b> {{ project.name }}</p>
+
+      <p>
+        <b>Status:</b>
+        <span class="badge active">{{ project.status }}</span>
+      </p>
+
+      <p><b>Sensor:</b> {{ project.sensor }}</p>
+      <p><b>Supervisor:</b> {{ project.supervisor }}</p>
+      <p><b>Started:</b> {{ project.start }}</p>
+      <p><b>Ending:</b> {{ project.end }}</p>
+
+    </div>
+
+  </div>
+
+</div>

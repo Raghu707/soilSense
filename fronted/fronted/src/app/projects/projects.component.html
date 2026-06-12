@@ -1,0 +1,129 @@
+
+<div class="main">
+
+  <!-- ✅ TOPBAR -->
+  <div class="top-bar">
+    <div>
+      <h2>Projects</h2>
+      <p class="subtitle">{{ projects.length }} projects</p>
+    </div>
+
+    <button class="add-btn" (click)="openModal()">+ Add Project</button>
+  </div>
+
+  <!-- ✅ TABLE -->
+  <div class="table-container">
+
+    <table>
+
+      <!-- ✅ HEADER -->
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Sensor ID</th>
+          <th>Student</th>
+          <th>Started</th>
+          <th>Ending</th>
+          <th>Status</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+
+      <!-- ✅ BODY -->
+      <tbody>
+        <tr *ngFor="let p of projects">
+
+          <!-- ✅ PROJECT NAME + LOCATION -->
+          <td>
+            <div>
+              <b>{{ p.name }}</b>
+              <small>{{ p.location }}</small>
+            </div>
+          </td>
+
+          <td>{{ p.sensorId || 'SNS-001' }}</td>
+
+          <td>
+            {{ p.supervisor?.name || 'N/A' }}
+          </td>
+
+          <td>
+            {{ p.startDate | date:'MMM yyyy' }}
+          </td>
+
+          <td>
+            {{ p.endDate | date:'MMM yyyy' }}
+          </td>
+
+          <!-- ✅ STATUS -->
+          <td>
+            <span class="status"
+                  [ngClass]="p.status === 'active' ? 'active' : 'paused'">
+              ● {{ p.status }}
+            </span>
+          </td>
+
+          <!-- ✅ BUTTON -->
+         <td>
+  <button class="view-btn" (click)="openGraph(p._id)">
+    View Graph
+  </button>
+</td>
+
+
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<!-- ✅ MODAL -->
+<!-- ✅ MODAL -->
+<div class="modal" *ngIf="showModal">
+
+  <div class="modal-box">
+
+    <h3>Create Project</h3>
+
+    <!-- ✅ FORM -->
+    <div class="form">
+
+      <input [(ngModel)]="newProject.name" placeholder="Project Name" />
+      <input [(ngModel)]="newProject.description" placeholder="Description" />
+      <input [(ngModel)]="newProject.location" placeholder="Location" />
+      <input [(ngModel)]="newProject.sensorId" placeholder="Sensor ID" />
+
+      <!-- ✅ DATE ROW -->
+      <div class="row">
+        <div>
+          <label>Start Date</label>
+          <input type="date" [(ngModel)]="newProject.startDate" />
+        </div>
+
+        <div>
+          <label>End Date</label>
+          <input type="date" [(ngModel)]="newProject.endDate" />
+        </div>
+      </div>
+
+      <!-- ✅ STATUS -->
+      <select [(ngModel)]="newProject.status">
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="completed">Completed</option>
+      </select>
+
+    </div>
+
+    <!-- ✅ ACTION BUTTONS -->
+    <div class="actions">
+      <button class="save" (click)="createProject()">Save</button>
+      <button class="cancel" (click)="closeModal()">Cancel</button>
+    </div>
+
+  </div>
+
+</div>

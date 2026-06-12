@@ -1,0 +1,82 @@
+<h2>Welcome, {{ name }}</h2>
+<p class="subtitle">Here are the sensors assigned to your projects.</p>
+
+<!-- ✅ TOP -->
+<div class="top-bar">
+  <h3>Sensors</h3>
+  <button class="add-btn" (click)="openModal()">+ Add sensor</button>
+</div>
+
+<!-- ✅ TABLE -->
+<div class="table-container">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Sensor ID</th>
+        <th>Battery</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let s of sensors">
+
+        <td>{{ s.sensorId }}</td>
+
+        <!-- ✅ BATTERY -->
+        <td>
+          <div class="battery">
+            <div class="level" [style.width.%]="s.battery"></div>
+          </div>
+          {{ s.battery }}%
+        </td>
+
+        <!-- ✅ STATUS -->
+        <td>
+          <span [ngClass]="s.status === 'online' ? 'online' : 'offline'">
+            ● {{ s.status }}
+          </span>
+        </td>
+
+        <!-- ✅ ACTION -->
+        <td>
+          <button class="delete-btn" (click)="deleteSensor(s._id)">
+            Delete
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<!-- ✅ MODAL -->
+<div class="modal" *ngIf="showModal">
+
+  <div class="modal-box">
+
+    <h3>Add Sensor</h3>
+
+    <input [(ngModel)]="newSensor.sensorId" placeholder="Sensor ID" />
+
+    <select [(ngModel)]="newSensor.status">
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+    </select>
+
+    <input type="number" [(ngModel)]="newSensor.battery" placeholder="Battery %" />
+
+    <div class="actions">
+      <button (click)="createSensor()">Save</button>
+      <button (click)="closeModal()">Cancel</button>
+    </div>
+
+  </div>
+
+</div>

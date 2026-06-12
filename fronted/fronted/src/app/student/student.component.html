@@ -1,0 +1,93 @@
+<h2>Students</h2>
+<p class="subtitle">{{ students.length }} students</p>
+
+<div class="top-bar">
+  <button class="add-btn" (click)="openModal()">+ Add Student</button>
+</div>
+
+<div class="table-container">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Student ID</th>
+        <th>Email</th>
+        <th>Seminar</th>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Detail</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let s of students; let i = index">
+
+        <!-- ✅ NAME + AVATAR -->
+        <td>
+          <div class="avatar">
+            {{ s.name.charAt(0) }}
+          </div>
+          {{ s.name }}
+        </td>
+
+        <td>{{ s.studentId }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.seminar }}</td>
+        <td>{{ s.project }}</td>
+
+        <!-- ✅ STATUS -->
+        <td>
+          <span [ngClass]="s.status.toLowerCase()">
+            ● {{ s.status }}
+          </span>
+        </td>
+
+        <!-- ✅ VIEW -->
+        <td>
+          <button class="view-btn">View graph</button>
+        </td>
+
+        <!-- ✅ DELETE -->
+        <td>
+          <button class="delete-btn" (click)="deleteStudent(i)">
+            Delete
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ✅ MODAL -->
+<div class="modal" *ngIf="showModal">
+
+  <div class="modal-box">
+
+    <h3>Add Student</h3>
+
+    <input [(ngModel)]="newStudent.name" placeholder="Name" />
+    <input [(ngModel)]="newStudent.studentId" placeholder="Student ID" />
+    <input [(ngModel)]="newStudent.email" placeholder="Email" />
+    <input [(ngModel)]="newStudent.seminar" placeholder="Seminar" />
+    <input [(ngModel)]="newStudent.project" placeholder="Project" />
+
+    <select [(ngModel)]="newStudent.status">
+      <option value="Active">Active</option>
+      <option value="Paused">Paused</option>
+      <option value="Invited">Invited</option>
+    </select>
+
+    <div class="actions">
+      <button (click)="createStudent()">Save</button>
+      <button (click)="closeModal()">Cancel</button>
+    </div>
+
+  </div>
+
+</div>

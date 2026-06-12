@@ -1,0 +1,78 @@
+<div class="dashboard">
+
+  <h2>Welcome back, {{ name }}</h2>
+  <p class="subtitle">
+    Log a new observation or review your past entries.
+  </p>
+
+  <!-- CARDS -->
+  <div class="cards">
+
+    <div class="card">
+      <small>PROJECT</small>
+      <h3>North field — wheat trial</h3>
+      <p class="sub">Field A · 2.3 ha</p>
+    </div>
+
+    <div class="card">
+      <small>SENSOR</small>
+      <h3>Tuya Sensor</h3>
+      <p class="sub">Live data connected</p>
+    </div>
+
+  </div>
+
+  <!-- TABLE HEADER -->
+  <div class="table-header">
+    <h3>All observations</h3>
+    <span>{{ observations.length }} observations</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Weather</th>
+          <th>Humidity</th>
+          <th>Temp</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let o of observations">
+
+          <td>
+            <b>{{ o.date }}</b><br>
+            <small>{{ o.time }}</small>
+          </td>
+
+          <!-- ✅ WEATHER EMOJI -->
+          <td>
+            <span class="tag" [ngClass]="o.weather">
+              {{ o.weather === 'sunny' ? '☀️' :
+                 o.weather === 'cloudy' ? '☁️' :
+                 o.weather === 'rain' ? '🌧️' :
+                 '❄️' }}
+            </span>
+          </td>
+
+          <td>{{ o.moisture }}%</td>
+          <td>{{ o.temp }}°C</td>
+
+          <td class="notes">{{ o.notes }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

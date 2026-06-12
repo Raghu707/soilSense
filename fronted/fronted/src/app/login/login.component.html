@@ -1,0 +1,49 @@
+<div class="auth-wrapper">
+
+  <!-- LEFT SECTION -->
+  <div class="left">
+    <h1>SoilSense</h1>
+
+    <h2>Monitor your fields in real time.</h2>
+
+    <p>
+      Live sensor readings, field observations, and project tracking —
+      all in one place.
+    </p>
+
+    <span>v1 · MEAN stack · Tuya integration</span>
+  </div>
+
+  <!-- RIGHT SECTION -->
+  <div class="right">
+
+    <div class="card">
+
+      <div class="tabs">
+        <span class="active">Log in</span>
+        <span routerLink="/register">Sign up</span>
+      </div>
+
+      <h2>Welcome back</h2>
+
+      <input [(ngModel)]="email" placeholder="Email" />
+      <input [(ngModel)]="password" type="password" placeholder="Password" />
+
+      <div class="options">
+        <label>
+          <input type="checkbox" /> Keep me signed in
+        </label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button (click)="onLogin()">Log in</button>
+
+      <p>
+        New to SoilSense?
+        <span routerLink="/register">Create an account</span>
+      </p>
+
+    </div>
+
+  </div>
+</div>
