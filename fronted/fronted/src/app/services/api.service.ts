@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+const API = "https://soilsense-1-zp8c.onrender.com/api";
 
 // ✅ Get token helper
 const getAuthHeader = () => {
