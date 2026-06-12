@@ -5,7 +5,7 @@ import {
   getSensorById,
   updateSensor,
   deleteSensor,
-  fetchSensorData,
+  fetchSensorData
 } from "../controllers/sensorController.js";
 
 import { protect } from "../middleware/authMiddleware.js";

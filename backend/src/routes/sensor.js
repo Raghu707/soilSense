@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import crypto from "crypto";
 import dotenv from "dotenv";
-
+import { getAllSensors } from "../controllers/sensorController.js";
 import RawSensorReading from "../models/RawSensorReading.js";
 import Sensor from "../models/Sensor.js";
 
@@ -10,20 +10,17 @@ dotenv.config();
 
 const router = express.Router();
 
-/* ================================
-   ✅ ENV CONFIG
-================================ */
 const CLIENT_ID = process.env.TUYA_CLIENT_ID;
 const CLIENT_SECRET = process.env.TUYA_CLIENT_SECRET;
 const DEVICE_ID = process.env.DEVICE_ID;
 const HOST = process.env.TUYA_BASE_HOST;
 
-/* ================================
-   ✅ TUYA SIGNATURE
-================================ */
+// ✅ Empty body hash (required by Tuya)
 const EMPTY_HASH =
   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
+
+// ✅ SIGN FUNCTION (CORRECT VERSION)
 function sign({ t, method, path, token }) {
   const str = token
     ? CLIENT_ID + token + t + `${method}\n${EMPTY_HASH}\n\n${path}`
@@ -36,9 +33,8 @@ function sign({ t, method, path, token }) {
     .toUpperCase();
 }
 
-/* ================================
-   ✅ GET TUYA TOKEN
-================================ */
+
+// ✅ STEP 1: GET TOKEN
 async function getToken() {
   const t = Date.now().toString();
   const path = "/v1.0/token?grant_type=1";
@@ -55,89 +51,9 @@ async function getToken() {
   return response.data.result.access_token;
 }
 
-/* ================================
-   ✅ CREATE SENSOR
-================================ */
-router.post("/", async (req, res) => {
-  try {
-    const sensor = await Sensor.create(req.body);
-    res.json(sensor);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
-/* ================================
-   ✅ GET ALL SENSORS
-================================ */
-router.get("/", async (req, res) => {
-  try {
-    const sensors = await Sensor.find().sort({ createdAt: -1 });
-    res.json(sensors);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ================================
-   ✅ GET SINGLE SENSOR
-================================ */
-router.get("/:id", async (req, res) => {
-  try {
-    const sensor = await Sensor.findById(req.params.id);
-
-    if (!sensor) {
-      return res.status(404).json({ message: "Sensor not found" });
-    }
-
-    res.json(sensor);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ================================
-   ✅ UPDATE SENSOR
-================================ */
-router.put("/:id", async (req, res) => {
-  try {
-    const updated = await Sensor.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ message: "Sensor not found" });
-    }
-
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ================================
-   ✅ DELETE SENSOR
-================================ */
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await Sensor.findByIdAndDelete(req.params.id);
-
-    if (!deleted) {
-      return res.status(404).json({ message: "Sensor not found" });
-    }
-
-    res.json({ message: "✅ Sensor deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ================================
-   ✅ FETCH REAL SENSOR DATA (TUYA)
-================================ */
-router.get("/fetch/data", async (req, res) => {
+// ✅ STEP 2: FETCH SENSOR DATA + STORE IN DB
+router.get("/data", async (req, res) => {
   try {
     const token = await getToken();
 
@@ -156,13 +72,14 @@ router.get("/fetch/data", async (req, res) => {
 
     const result = response.data.result;
 
-    let temperature = null;
-    let humidity = null;
-    let battery = null;
+    // ✅ Map sensor values (CORRECTED)
+    let temperatureC = 0;
+    let humidity = 0;
+    let battery = 0;
 
     result.forEach(item => {
       if (item.code === "temp_current") {
-        temperature = item.value / 10;
+        temperatureC = item.value / 10;
       }
       if (item.code === "humidity") {
         humidity = item.value;
@@ -172,32 +89,23 @@ router.get("/fetch/data", async (req, res) => {
       }
     });
 
-    // ✅ Save reading
+    // ✅ Save to rawSensorReadings
     const record = await RawSensorReading.create({
       deviceId: DEVICE_ID,
-      temperature,
+      temperatureC,
       humidity,
       battery
     });
 
-    // ✅ Update sensor latest values
+    // ✅ Ensure sensor exists (metadata)
     await Sensor.updateOne(
       { deviceId: DEVICE_ID },
-      {
-        deviceId: DEVICE_ID,
-        temperature,
-        humidity,
-        battery,
-        fetchedAt: new Date()
-      },
+      { deviceId: DEVICE_ID },
       { upsert: true }
     );
 
     res.json({
-      message: "✅ Data fetched & stored",
-      temperature,
-      humidity,
-      battery,
+      message: "✅ Sensor data fetched and stored",
       record
     });
 
@@ -206,33 +114,26 @@ router.get("/fetch/data", async (req, res) => {
   }
 });
 
-/* ================================
-   ✅ GET ALL RAW READINGS
-================================ */
-router.get("/readings/all", async (req, res) => {
-  try {
-    const readings = await RawSensorReading.find()
-      .sort({ createdAt: -1 });
 
+// ✅ OPTIONAL: GET ALL READINGS
+router.get("/readings", async (req, res) => {
+  try {
+    const readings = await RawSensorReading.find().sort({ createdAt: -1 });
     res.json(readings);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ================================
-   ✅ GET READINGS BY DEVICE
-================================ */
-router.get("/readings/:deviceId", async (req, res) => {
+export const getAllSensors = async (req, res) => {
   try {
-    const readings = await RawSensorReading.find({
-      deviceId: req.params.deviceId
-    }).sort({ createdAt: -1 });
-
-    res.json(readings);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const sensors = await Sensor.find().sort({ createdAt: -1 });
+    res.json(sensors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
+};
+router.get("/", getAllSensors);
+
 
 export default router;
