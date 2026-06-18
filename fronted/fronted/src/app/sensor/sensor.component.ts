@@ -3,7 +3,7 @@ import { getSensors, createSensor, deleteSensor } from '../services/api.service'
 
 @Component({
   selector: 'app-admin-sensors',
- templateUrl: './sensor.component.html',
+  templateUrl: './sensor.component.html',
   styleUrls: ['./sensor.component.css']
 })
 export class SensorComponent implements OnInit {
@@ -14,11 +14,11 @@ export class SensorComponent implements OnInit {
   // ✅ modal
   showModal = false;
 
-  // ✅ new sensor form
+  // ✅ updated sensor model
   newSensor: any = {
-    sensorId: '',
-    status: 'online',
-    battery: 100
+    deviceId: '',
+    metalDescription: '',
+    materialDescription: ''
   };
 
   ngOnInit() {
@@ -41,9 +41,22 @@ export class SensorComponent implements OnInit {
   }
 
   createSensor() {
+
+    if (!this.newSensor.deviceId) {
+      alert("Device ID required");
+      return;
+    }
+
     createSensor(this.newSensor).then(() => {
       this.loadSensors();
       this.closeModal();
+
+      // ✅ reset form
+      this.newSensor = {
+        deviceId: '',
+        metalDescription: '',
+        materialDescription: ''
+      };
     });
   }
 

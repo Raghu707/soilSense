@@ -126,4 +126,77 @@ router.get("/readings", async (req, res) => {
 });
 
 
+// ✅ GET ALL SENSORS (LATEST VALUE ONLY)
+router.get("/all-sensors", async (req, res) => {
+  try {
+    // 1. Get all sensors
+    const sensors = await Sensor.find().sort({ createdAt: -1 });
+
+    // 2. For each sensor get latest reading
+    const sensorData = await Promise.all(
+      sensors.map(async (sensor) => {
+        const latest = await RawSensorReading
+          .findOne({ deviceId: sensor.deviceId })
+          .sort({ createdAt: -1 });
+
+        return {
+          _id: sensor._id,
+          deviceId: sensor.deviceId,
+          metalDescription: sensor.metalDescription,
+          materialDescription: sensor.materialDescription,
+
+          // ✅ Latest values (if exists)
+          temperature: latest ? latest.temperatureC : null,
+          humidity: latest ? latest.humidity : null,
+          battery: latest ? latest.battery : null,
+          lastUpdated: latest ? latest.createdAt : null
+        };
+      })
+    );
+
+    res.json(sensorData);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ ADD SENSOR MANUALLY
+router.post("/add-sensor", async (req, res) => {
+  try {
+    const { deviceId, metalDescription, materialDescription } = req.body;
+
+    // ✅ validation
+    if (!deviceId) {
+      return res.status(400).json({
+        message: "deviceId is required"
+      });
+    }
+
+    // ✅ check if already exists
+    const existing = await Sensor.findOne({ deviceId });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "Sensor already exists"
+      });
+    }
+
+    // ✅ create new sensor
+    const sensor = await Sensor.create({
+      deviceId,
+      metalDescription: metalDescription || "",
+      materialDescription: materialDescription || ""
+    });
+
+    res.status(201).json({
+      message: "✅ Sensor added successfully",
+      sensor
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;

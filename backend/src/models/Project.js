@@ -12,6 +12,21 @@ const projectSchema = new mongoose.Schema({
 
   startDate: Date,
 
+  
+// ✅ ADD THIS
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+
+  // ✅ ADD THIS
+  sensorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Sensor",
+    required: true
+  },
+
   // ✅ NEW FIELD
   endDate: Date,
 

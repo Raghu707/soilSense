@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { getStudents, registerUser, deleteUser } from '../services/api.service';
 
 @Component({
   selector: 'app-admin-students',
-   templateUrl: './student.component.html',
+  templateUrl: './student.component.html',
   styleUrls: ['./student.component.css']
 })
 export class StudentComponent implements OnInit {
@@ -10,38 +11,30 @@ export class StudentComponent implements OnInit {
   students: any[] = [];
   showModal = false;
 
+  // ✅ NEW STUDENT FORM (aligned with backend)
   newStudent: any = {
     name: '',
-    studentId: '',
     email: '',
-    seminar: '',
-    project: '',
-    status: 'active'
+    password: '',
+    role: 'student'
   };
 
   ngOnInit() {
-
-    // ✅ TEMP DATA (connect API later)
-    this.students = [
-      {
-        name: 'Anna Kowalski',
-        studentId: 'STU-001',
-        email: 'anna@test.com',
-        seminar: 'SEM-2026-04',
-        project: 'North field',
-        status: 'Active'
-      },
-      {
-        name: 'Mateusz',
-        studentId: 'STU-002',
-        email: 'mateusz@test.com',
-        seminar: 'SEM-2026-04',
-        project: 'South plot',
-        status: 'Active'
-      }
-    ];
+    this.loadStudents();
   }
 
+  // ✅ LOAD STUDENTS FROM API
+  loadStudents() {
+    getStudents()
+      .then((res: any) => {
+        this.students = res.data;
+      })
+      .catch((err: any) => {
+        console.error("Error loading students:", err);
+      });
+  }
+
+  // ✅ MODAL
   openModal() {
     this.showModal = true;
   }
@@ -50,24 +43,47 @@ export class StudentComponent implements OnInit {
     this.showModal = false;
   }
 
+  // ✅ CREATE STUDENT (REGISTER API)
   createStudent() {
-    this.students.push({ ...this.newStudent });
 
-    this.closeModal();
+    if (!this.newStudent.name || !this.newStudent.email || !this.newStudent.password) {
+      alert("All fields required");
+      return;
+    }
 
-    this.newStudent = {
-      name: '',
-      studentId: '',
-      email: '',
-      seminar: '',
-      project: '',
-      status: 'active'
-    };
+    registerUser(this.newStudent)
+      .then(() => {
+        alert("✅ Student created successfully");
+
+        this.loadStudents();
+        this.closeModal();
+
+        // reset form
+        this.newStudent = {
+          name: '',
+          email: '',
+          password: '',
+          role: 'student'
+        };
+      })
+      .catch((err: any) => {
+        console.error("Create error:", err);
+        alert(err?.response?.data?.msg || "❌ Failed to create student");
+      });
   }
 
-  deleteStudent(index: number) {
+  // ✅ DELETE STUDENT
+  deleteStudent(id: string) {
     if (confirm("Delete student?")) {
-      this.students.splice(index, 1);
+      deleteUser(id)
+        .then(() => {
+          alert("✅ Student deleted");
+          this.loadStudents();
+        })
+        .catch((err: any) => {
+          console.error("Delete error:", err);
+          alert("❌ Failed to delete student");
+        });
     }
   }
 }

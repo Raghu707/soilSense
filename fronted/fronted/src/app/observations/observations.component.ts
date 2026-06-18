@@ -10,6 +10,8 @@ export class ObservationsComponent {
 
   API_URL = "https://soilsense-1-zp8c.onrender.com/api";
 
+//API_URL = "http://localhost:5000/api";
+
   project = 'North field — wheat trial';
   today = new Date();
 

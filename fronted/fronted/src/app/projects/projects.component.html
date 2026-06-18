@@ -1,4 +1,3 @@
-
 <div class="main">
 
   <!-- ✅ TOPBAR -->
@@ -13,14 +12,12 @@
 
   <!-- ✅ TABLE -->
   <div class="table-container">
-
     <table>
 
-      <!-- ✅ HEADER -->
       <thead>
         <tr>
           <th>Project</th>
-          <th>Sensor ID</th>
+          <th>Sensor</th>
           <th>Student</th>
           <th>Started</th>
           <th>Ending</th>
@@ -29,11 +26,10 @@
         </tr>
       </thead>
 
-      <!-- ✅ BODY -->
       <tbody>
         <tr *ngFor="let p of projects">
 
-          <!-- ✅ PROJECT NAME + LOCATION -->
+          <!-- Project -->
           <td>
             <div>
               <b>{{ p.name }}</b>
@@ -41,46 +37,43 @@
             </div>
           </td>
 
-          <td>{{ p.sensorId || 'SNS-001' }}</td>
-
+          <!-- Sensor -->
           <td>
-            {{ p.supervisor?.name || 'N/A' }}
+            {{ p.sensor?.deviceId || p.sensorId || 'N/A' }}
           </td>
 
+          <!-- Student -->
           <td>
-            {{ p.startDate | date:'MMM yyyy' }}
+            {{ p.student?.name || 'N/A' }}
           </td>
 
-          <td>
-            {{ p.endDate | date:'MMM yyyy' }}
-          </td>
+          <!-- Dates -->
+          <td>{{ p.startDate | date:'MMM yyyy' }}</td>
+          <td>{{ p.endDate | date:'MMM yyyy' }}</td>
 
-          <!-- ✅ STATUS -->
+          <!-- Status -->
           <td>
             <span class="status"
-                  [ngClass]="p.status === 'active' ? 'active' : 'paused'">
+              [ngClass]="p.status === 'active' ? 'active' : 'paused'">
               ● {{ p.status }}
             </span>
           </td>
 
-          <!-- ✅ BUTTON -->
-         <td>
-  <button class="view-btn" (click)="openGraph(p._id)">
-    View Graph
-  </button>
-</td>
-
+          <!-- Graph -->
+          <td>
+            <button class="view-btn" (click)="openGraph(p._id)">
+              View Graph
+            </button>
+          </td>
 
         </tr>
       </tbody>
 
     </table>
-
   </div>
 
 </div>
 
-<!-- ✅ MODAL -->
 <!-- ✅ MODAL -->
 <div class="modal" *ngIf="showModal">
 
@@ -94,9 +87,44 @@
       <input [(ngModel)]="newProject.name" placeholder="Project Name" />
       <input [(ngModel)]="newProject.description" placeholder="Description" />
       <input [(ngModel)]="newProject.location" placeholder="Location" />
-      <input [(ngModel)]="newProject.sensorId" placeholder="Sensor ID" />
 
-      <!-- ✅ DATE ROW -->
+      <!-- ✅ PAIR SELECTION -->
+      <label>Add Student & Sensor Pair</label>
+
+      <div class="row">
+
+        <!-- Student -->
+        <select [(ngModel)]="newProject.studentId">
+          <option value="">-- Student --</option>
+          <option *ngFor="let s of students" [value]="s._id">
+            {{ s.name }} ({{ s.email }})
+          </option>
+        </select>
+
+        <!-- Sensor -->
+        <select [(ngModel)]="newProject.sensorId">
+          <option value="">-- Sensor --</option>
+          <option *ngFor="let s of sensors" [value]="s._id">
+            {{ s.deviceId }}
+          </option>
+        </select>
+
+        <!-- ✅ ADD BUTTON -->
+        <button class="add-pair-btn" (click)="addPair()">+ Add</button>
+
+      </div>
+
+      <!-- ✅ CHIPS DISPLAY -->
+      <div class="chip-container">
+
+        <span class="chip" *ngFor="let p of pairs; let i = index">
+          {{ p.studentName }} • {{ p.sensorName }}
+          <button (click)="removePair(i)">✖</button>
+        </span>
+
+      </div>
+
+      <!-- ✅ DATE -->
       <div class="row">
         <div>
           <label>Start Date</label>
@@ -118,7 +146,7 @@
 
     </div>
 
-    <!-- ✅ ACTION BUTTONS -->
+    <!-- ✅ ACTIONS -->
     <div class="actions">
       <button class="save" (click)="createProject()">Save</button>
       <button class="cancel" (click)="closeModal()">Cancel</button>

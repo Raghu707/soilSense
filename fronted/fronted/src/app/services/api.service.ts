@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API = "https://soilsense-1-zp8c.onrender.com/api";
+//const API= "http://localhost:5000/api";
 
 // ✅ Get token helper
 const getAuthHeader = () => {
@@ -62,24 +63,27 @@ export const deleteProject = (id: string) => {
 ================================= */
 
 export const getSensors = () => {
-  return axios.get(`${API}/sensors`, getAuthHeader());
+  return axios.get(`${API}/sensors/all-sensors`, getAuthHeader());
 };
 
 export const getSensorById = (id: string) => {
-  return axios.get(`${API}/sensors/${id}`, getAuthHeader());
+  return axios.get(`${API}/sensors/all-sensors/${id}`, getAuthHeader());
 };
 
 export const createSensor = (data: any) => {
-  return axios.post(`${API}/sensors`, data, getAuthHeader());
+  return axios.post(`${API}/sensors/add-sensor`, data, getAuthHeader());
 };
 
 export const updateSensor = (id: string, data: any) => {
-  return axios.put(`${API}/sensors/${id}`, data, getAuthHeader());
+  return axios.put(`${API}/sensors/add-sensor/${id}`, data, getAuthHeader());
 };
 
 export const deleteSensor = (id: string) => {
-  return axios.delete(`${API}/sensors/${id}`, getAuthHeader());
+  return axios.delete(`${API}/sensors/all-sensors/${id}`, getAuthHeader());
 };
+export function getUsers() {
+  return axios.get('/api/users');
+}
 
 // ✅ Fetch Tuya data
 export const fetchSensorData = (sensorId: string) => {
@@ -110,3 +114,15 @@ export const createObservation = (data: any) => {
 export const deleteObservation = (id: string) => {
   return axios.delete(`${API}/observations/${id}`, getAuthHeader());
 };
+export function getStudents() {
+  return axios.get(`${API}/users/students`, getAuthHeader())
+ 
+}
+
+export function registerUser(data: any) {
+  return axios.post(`${API}/users/register`, data, getAuthHeader());
+}
+
+export function deleteUser(id: string) {
+  return axios.delete(`${API}/users/${id}`, getAuthHeader());
+}

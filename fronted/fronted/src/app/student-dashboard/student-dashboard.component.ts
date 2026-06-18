@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class StudentDashboardComponent implements OnInit {
 
   API_URL = "https://soilsense-1-zp8c.onrender.com/api";
+  //API_URL = "http://localhost:5000/api";
 
   name = '';
   observations: any[] = [];
