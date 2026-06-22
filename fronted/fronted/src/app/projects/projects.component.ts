@@ -23,7 +23,7 @@ export class AdminProjectsComponent implements OnInit {
 
   showModal: boolean = false;
 
-  // ✅ ✅ TEMP STORAGE (FINAL KEY FEATURE)
+  // ✅ Pair storage (student + sensor)
   pairs: any[] = [];
 
   newProject: any = {
@@ -32,7 +32,6 @@ export class AdminProjectsComponent implements OnInit {
     location: '',
     startDate: '',
     endDate: '',
-    status: 'active',
     studentId: '',
     sensorId: ''
   };
@@ -50,7 +49,26 @@ export class AdminProjectsComponent implements OnInit {
   loadProjects() {
     getProjects()
       .then((res: any) => {
-        this.projects = res.data;
+
+        // ✅ IMPORTANT: Normalize students (backend safe)
+        this.projects = res.data.map((p: any) => {
+
+          // handle both cases: studentId OR students[]
+          let studentsList = [];
+
+          if (p.students && Array.isArray(p.students)) {
+            studentsList = p.students;
+          } else if (p.studentId) {
+            // fallback (single student)
+            studentsList = [p.studentId];
+          }
+
+          return {
+            ...p,
+            students: studentsList
+          };
+        });
+
       })
       .catch((err: any) => {
         console.error("Error loading projects:", err);
@@ -88,71 +106,62 @@ export class AdminProjectsComponent implements OnInit {
   closeModal() {
     this.showModal = false;
 
-    // ✅ reset everything when closing
+    // ✅ Reset state
     this.pairs = [];
     this.newProject.studentId = '';
     this.newProject.sensorId = '';
   }
 
   /* =====================================
-     ✅ ADD PAIR (CHIP LOGIC)
+     ✅ ADD PAIR (VALIDATION SAFE)
   ===================================== */
 
   addPair() {
 
-  const { studentId, sensorId } = this.newProject;
+    const { studentId, sensorId } = this.newProject;
 
-  if (!studentId || !sensorId) {
-    alert("Select both student and sensor");
-    return;
+    if (!studentId || !sensorId) {
+      alert("Select both student and sensor");
+      return;
+    }
+
+    // ❌ duplicate same pair
+    if (this.pairs.find(p => p.studentId === studentId && p.sensorId === sensorId)) {
+      alert("Pair already added");
+      return;
+    }
+
+    // ❌ same sensor reused
+    if (this.pairs.find(p => p.sensorId === sensorId)) {
+      alert("This sensor is already assigned");
+      return;
+    }
+
+    // ❌ same student reused
+    if (this.pairs.find(p => p.studentId === studentId)) {
+      alert("This student is already assigned");
+      return;
+    }
+
+    // ✅ lookup
+    const student = this.students.find(s => s._id === studentId);
+    const sensor = this.sensors.find(s => s._id === sensorId);
+
+    // ✅ push pair
+    this.pairs.push({
+      studentId,
+      sensorId,
+      studentName: student?.name || 'Unknown',
+      sensorName: sensor?.deviceId || 'Unknown'
+    });
+
+    // ✅ reset selection
+    this.newProject.studentId = '';
+    this.newProject.sensorId = '';
   }
-
-  // ❌ prevent duplicate exact pair
-  const pairExists = this.pairs.find(
-    p => p.studentId === studentId && p.sensorId === sensorId
-  );
-  if (pairExists) {
-    alert("Pair already added");
-    return;
-  }
-
-  // ❌ prevent SAME SENSOR reuse
-  const sensorUsed = this.pairs.find(
-    p => p.sensorId === sensorId
-  );
-  if (sensorUsed) {
-    alert("This sensor is already assigned in another pair");
-    return;
-  }
-
-  // ❌ prevent SAME STUDENT reuse ✅ NEW LOGIC
-  const studentUsed = this.pairs.find(
-    p => p.studentId === studentId
-  );
-  if (studentUsed) {
-    alert("This student is already assigned to a sensor");
-    return;
-  }
-
-  // ✅ find display values
-  const student = this.students.find(s => s._id === studentId);
-  const sensor = this.sensors.find(s => s._id === sensorId);
-
-  // ✅ push pair
-  this.pairs.push({
-    studentId,
-    sensorId,
-    studentName: student?.name,
-    sensorName: sensor?.deviceId
-  });
-
-  // ✅ reset dropdown
-  this.newProject.studentId = '';
-  this.newProject.sensorId = '';
-}
 
   /* =====================================
-     ✅ REMOVE CHIP
+     ✅ REMOVE PAIR
   ===================================== */
 
   removePair(index: number) {
@@ -175,17 +184,26 @@ export class AdminProjectsComponent implements OnInit {
       return;
     }
 
-    // ✅ send first pair for main project
+    /*
+      ✅ IMPORTANT CHANGE:
+      Send ALL students instead of only first one
+    */
     const payload = {
-      ...this.newProject,
-      studentId: this.pairs[0].studentId,
-      sensorId: this.pairs[0].sensorId
+      name: this.newProject.name,
+      description: this.newProject.description,
+      location: this.newProject.location,
+      startDate: this.newProject.startDate,
+      endDate: this.newProject.endDate,
+
+      // ✅ send arrays
+      students: this.pairs.map(p => p.studentId),
+      sensors: this.pairs.map(p => p.sensorId)
     };
 
     createProject(payload)
       .then(() => {
 
-        alert("✅ Project + Mapping created");
+        alert("✅ Project + Student-Sensor mapping created");
 
         // ✅ reset everything
         this.pairs = [];
@@ -196,7 +214,6 @@ export class AdminProjectsComponent implements OnInit {
           location: '',
           startDate: '',
           endDate: '',
-          status: 'active',
           studentId: '',
           sensorId: ''
         };

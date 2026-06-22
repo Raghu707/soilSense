@@ -31,11 +31,6 @@ const projectSchema = new mongoose.Schema({
   endDate: Date,
 
   // ✅ NEW FIELD
-  status: {
-    type: String,
-    enum: ["active", "paused", "completed"],
-    default: "active"
-  }
 
 }, { timestamps: true });
 

@@ -2,37 +2,63 @@
 
   <!-- ✅ HEADER -->
   <div class="top-bar">
-    <h2>Students</h2>
-    <button class="add-btn" (click)="openModal()">+ Add Student</button>
+    <div>
+      <h2>👨‍💼 Student View</h2>
+      <p class="subtitle">Manage all student</p>
+    </div>
+
+    <button class="add-btn" (click)="openModal()">
+      + Add Supervisor
+    </button>
   </div>
 
-  <!-- ✅ TABLE -->
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+  <!-- ✅ TABLE CARD -->
+  <div class="table-container">
 
-    <tbody>
-      <tr *ngFor="let s of students">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
 
-        <td>{{ s.name }}</td>
+      <tbody>
 
-        <td>{{ s.email }}</td>
+        <tr *ngFor="let s of students">
 
-        <td>{{ s.status || 'active' }}</td>
+          <!-- ✅ NAME WITH AVATAR -->
+          <td>
+            <div class="user-cell">
+              <div class="avatar">
+                {{ s.name?.charAt(0) }}
+              </div>
+              <span>{{ s.name }}</span>
+            </div>
+          </td>
 
-        <td>
-          <button (click)="deleteStudent(s._id)">Delete</button>
-        </td>
+          <td>{{ s.email }}</td>
 
-      </tr>
-    </tbody>
-  </table>
+          <td>
+            <button class="delete-btn" (click)="deleteStudent(s._id)">
+              🗑 Delete
+            </button>
+          </td>
+
+        </tr>
+
+        <!-- ✅ EMPTY STATE -->
+        <tr *ngIf="students.length === 0">
+          <td colspan="3" class="no-data">
+            No supervisors available
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
 
 </div>
 
@@ -41,20 +67,30 @@
 
   <div class="modal-box">
 
-    <h3>Add Student</h3>
+    <h3>➕ Add Supervisor</h3>
 
     <div class="form">
 
-      <input [(ngModel)]="newStudent.name" placeholder="Full Name" />
+      <input
+        [(ngModel)]="newStudent.name"
+        placeholder="Full Name"
+      />
 
-      <input [(ngModel)]="newStudent.email" placeholder="Email" />
+      <input
+        [(ngModel)]="newStudent.email"
+        placeholder="Email"
+      />
 
-      <input type="password" [(ngModel)]="newStudent.password" placeholder="Password" />
+      <input
+        type="password"
+        [(ngModel)]="newStudent.password"
+        placeholder="Password"
+      />
 
     </div>
 
     <div class="actions">
-      <button class="save" (click)="createStudent()">Save</button>
+      <button class="save" (click)="createStudent()">✅ Save</button>
       <button class="cancel" (click)="closeModal()">Cancel</button>
     </div>
 

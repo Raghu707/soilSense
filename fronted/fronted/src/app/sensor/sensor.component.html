@@ -1,51 +1,79 @@
 <div class="main">
 
+  <!-- ✅ HEADER -->
   <div class="top-bar">
-    <h2>Sensors</h2>
-    <button class="add-btn" (click)="openModal()">+ Add Sensor</button>
+    <div>
+      <h2>📡 Sensors</h2>
+      <p class="subtitle">Manage all connected sensor devices</p>
+    </div>
+
+    <button class="add-btn" (click)="openModal()">
+      + Add Sensor
+    </button>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Device ID</th>
-        <th>Material</th>
-        <th>Metal</th>
-        <th>Temperature</th>
-        <th>Humidity</th>
-        <th>Battery</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+  <!-- ✅ TABLE CARD -->
+  <div class="table-container">
 
-    <tbody>
-      <tr *ngFor="let s of sensors">
+    <table>
+      <thead>
+        <tr>
+          <th>Device ID</th>
+          <th>Material</th>
+          <th>Metal</th>
+          <th>Battery</th>
+          <th>Action</th>
+        </tr>
+      </thead>
 
-        <td>{{ s.deviceId }}</td>
+      <tbody>
+        <tr *ngFor="let s of sensors">
 
-        <td>{{ s.materialDescription }}</td>
+          <td class="device">{{ s.deviceId }}</td>
 
-        <td>{{ s.metalDescription }}</td>
+          <td>{{ s.materialDescription }}</td>
 
-        <td>{{ s.temperature || '-' }}</td>
+          <td>{{ s.metalDescription }}</td>
 
-        <td>{{ s.humidity || '-' }}</td>
+          <!-- ✅ BATTERY BAR -->
+          <td>
+            <div class="battery">
+              <div 
+                class="level"
+                [ngStyle]="{ width: (s.battery || 0) + '%' }"
+              ></div>
+            </div>
+            <span class="battery-text">{{ s.battery || '-' }}%</span>
+          </td>
 
-        <td>{{ s.battery || '-' }}</td>
+          <td>
+            <button class="delete-btn" (click)="deleteSensor(s._id)">
+              🗑 Delete
+            </button>
+          </td>
 
-        <td>
-          <button (click)="deleteSensor(s._id)">Delete</button>
-        </td>
+        </tr>
 
-      </tr>
-    </tbody>
-  </table>
+        <!-- ✅ EMPTY STATE -->
+        <tr *ngIf="sensors.length === 0">
+          <td colspan="5" class="no-data">
+            No sensors available
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
 </div>
+
+
+<!-- ✅ MODAL -->
 <div class="modal" *ngIf="showModal">
 
   <div class="modal-box">
 
-    <h3>Add Sensor</h3>
+    <h3>➕ Add New Sensor</h3>
 
     <div class="form">
 
@@ -67,7 +95,7 @@
     </div>
 
     <div class="actions">
-      <button class="save" (click)="createSensor()">Save</button>
+      <button class="save" (click)="createSensor()">✅ Save</button>
       <button class="cancel" (click)="closeModal()">Cancel</button>
     </div>
 
