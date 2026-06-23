@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {
   getProjects,
   createProject,
+  updateProject,
+  deleteProject,
   getStudents,
   getSensors
 } from '../services/api.service';
@@ -21,9 +23,10 @@ export class AdminProjectsComponent implements OnInit {
   students: any[] = [];
   sensors: any[] = [];
 
-  showModal: boolean = false;
+  showModal = false;
+  editMode = false;
+  editId = '';
 
-  // ✅ Pair storage (student + sensor)
   pairs: any[] = [];
 
   newProject: any = {
@@ -42,195 +45,156 @@ export class AdminProjectsComponent implements OnInit {
     this.loadSensors();
   }
 
-  /* =====================================
-     ✅ LOAD DATA
-  ===================================== */
-
+  /* ✅ LOAD DATA */
   loadProjects() {
-    getProjects()
-      .then((res: any) => {
-
-        // ✅ IMPORTANT: Normalize students (backend safe)
-        this.projects = res.data.map((p: any) => {
-
-          // handle both cases: studentId OR students[]
-          let studentsList = [];
-
-          if (p.students && Array.isArray(p.students)) {
-            studentsList = p.students;
-          } else if (p.studentId) {
-            // fallback (single student)
-            studentsList = [p.studentId];
-          }
-
-          return {
-            ...p,
-            students: studentsList
-          };
-        });
-
-      })
-      .catch((err: any) => {
-        console.error("Error loading projects:", err);
-      });
+    getProjects().then((res: any) => {
+      this.projects = res.data;
+    });
   }
 
   loadStudents() {
-    getStudents()
-      .then((res: any) => {
-        this.students = res.data;
-      })
-      .catch((err: any) => {
-        console.error("Error loading students:", err);
-      });
+    getStudents().then((res: any) => {
+      this.students = res.data;
+    });
   }
 
   loadSensors() {
-    getSensors()
-      .then((res: any) => {
-        this.sensors = res.data;
-      })
-      .catch((err: any) => {
-        console.error("Error loading sensors:", err);
-      });
+    getSensors().then((res: any) => {
+      this.sensors = res.data;
+    });
   }
 
-  /* =====================================
-     ✅ MODAL CONTROL
-  ===================================== */
-
+  /* ✅ MODAL */
   openModal() {
     this.showModal = true;
   }
 
   closeModal() {
     this.showModal = false;
-
-    // ✅ Reset state
-    this.pairs = [];
-    this.newProject.studentId = '';
-    this.newProject.sensorId = '';
+    this.reset();
   }
 
-  /* =====================================
-     ✅ ADD PAIR (VALIDATION SAFE)
-  ===================================== */
+  /* ✅ RESET */
+  reset() {
+    this.editMode = false;
+    this.editId = '';
+    this.pairs = [];
 
+    this.newProject = {
+      name: '',
+      description: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      studentId: '',
+      sensorId: ''
+    };
+  }
+
+  /* ✅ ADD PAIR */
   addPair() {
-
     const { studentId, sensorId } = this.newProject;
 
-    if (!studentId || !sensorId) {
-      alert("Select both student and sensor");
-      return;
-    }
+    if (!studentId || !sensorId) return alert("Select both");
 
-    // ❌ duplicate same pair
-    if (this.pairs.find(p => p.studentId === studentId && p.sensorId === sensorId)) {
-      alert("Pair already added");
-      return;
-    }
-
-    // ❌ same sensor reused
-    if (this.pairs.find(p => p.sensorId === sensorId)) {
-      alert("This sensor is already assigned");
-      return;
-    }
-
-    // ❌ same student reused
     if (this.pairs.find(p => p.studentId === studentId)) {
-      alert("This student is already assigned");
-      return;
+      return alert("Student already assigned");
     }
 
-    // ✅ lookup
+    if (this.pairs.find(p => p.sensorId === sensorId)) {
+      return alert("Sensor already used");
+    }
+
     const student = this.students.find(s => s._id === studentId);
     const sensor = this.sensors.find(s => s._id === sensorId);
 
-    // ✅ push pair
     this.pairs.push({
       studentId,
       sensorId,
-      studentName: student?.name || 'Unknown',
-      sensorName: sensor?.deviceId || 'Unknown'
+      studentName: student?.name,
+      sensorName: sensor?.deviceId
     });
 
-    // ✅ reset selection
     this.newProject.studentId = '';
     this.newProject.sensorId = '';
   }
 
-  /* =====================================
-     ✅ REMOVE PAIR
-  ===================================== */
-
-  removePair(index: number) {
-    this.pairs.splice(index, 1);
+  removePair(i: number) {
+    this.pairs.splice(i, 1);
   }
 
-  /* =====================================
-     ✅ CREATE PROJECT
-  ===================================== */
+  /* ✅ CREATE + UPDATE */
+  saveProject() {
 
-  createProject() {
-
-    if (!this.newProject.name) {
-      alert("Project name required");
-      return;
-    }
-
-    if (this.pairs.length === 0) {
-      alert("Add at least one pair");
-      return;
-    }
-
-    /*
-      ✅ IMPORTANT CHANGE:
-      Send ALL students instead of only first one
-    */
     const payload = {
-      name: this.newProject.name,
-      description: this.newProject.description,
-      location: this.newProject.location,
-      startDate: this.newProject.startDate,
-      endDate: this.newProject.endDate,
-
-      // ✅ send arrays
+      ...this.newProject,
       students: this.pairs.map(p => p.studentId),
       sensors: this.pairs.map(p => p.sensorId)
     };
 
-    createProject(payload)
-      .then(() => {
-
-        alert("✅ Project + Student-Sensor mapping created");
-
-        // ✅ reset everything
-        this.pairs = [];
-
-        this.newProject = {
-          name: '',
-          description: '',
-          location: '',
-          startDate: '',
-          endDate: '',
-          studentId: '',
-          sensorId: ''
-        };
-
+    if (this.editMode) {
+      updateProject(this.editId, payload).then(() => {
+        alert("✅ Updated");
         this.closeModal();
         this.loadProjects();
-
-      })
-      .catch((err: any) => {
-        console.error("Create error:", err);
-        alert(err?.response?.data?.message || "❌ Failed");
       });
+    } else {
+      createProject(payload).then(() => {
+        alert("✅ Created");
+        this.closeModal();
+        this.loadProjects();
+      });
+    }
   }
 
-  /* =====================================
-     ✅ NAVIGATION
-  ===================================== */
+  /* ✅ EDIT */
+  editProject(p: any) {
+    this.openModal();
+    this.editMode = true;
+    this.editId = p._id;
+
+    this.newProject = {
+      name: p.name,
+      description: p.description,
+      location: p.location,
+      startDate: p.startDate?.substring(0,10),
+      endDate: p.endDate?.substring(0,10),
+      studentId: '',
+      sensorId: ''
+    };
+
+    this.pairs = p.students.map((s: any, i: number) => ({
+      studentId: s._id,
+      sensorId: p.sensors[i]?._id,
+      studentName: s.name,
+      sensorName: p.sensors[i]?.deviceId
+    }));
+  }
+
+  /* ✅ DELETE */
+  deleteProject(id: string) {
+    if (!confirm("Delete project?")) return;
+
+    deleteProject(id).then(() => {
+      alert("✅ Deleted");
+      this.loadProjects();
+    });
+  }
+  /* ✅ CHECK STUDENT USED */
+isStudentUsed(studentId: string): boolean {
+  return this.projects.some(project =>
+    project.students?.some((s: any) => s._id === studentId) &&
+    project._id !== this.editId // ✅ allow edit mode
+  );
+}
+
+/* ✅ CHECK SENSOR USED */
+isSensorUsed(sensorId: string): boolean {
+  return this.projects.some(project =>
+    project.sensors?.some((s: any) => s._id === sensorId) &&
+    project._id !== this.editId
+  );
+}
 
   openGraph(id: string) {
     this.router.navigate(['/admin/graph', id]);

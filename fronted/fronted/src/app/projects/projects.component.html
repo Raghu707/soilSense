@@ -1,110 +1,161 @@
 <div class="container">
 
-  <h2>📁 Projects</h2>
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h2>📁 Projects</h2>
+      <p>Manage IoT assignments</p>
+    </div>
+    <button class="create-btn" (click)="openModal()">+ New</button>
+  </div>
 
-  <!-- ✅ CREATE BUTTON -->
-  <button class="create-btn" (click)="openModal()">➕ Create Project</button>
+  <!-- TABLE -->
+  <div class="table-card">
 
-  <!-- ✅ PROJECT TABLE -->
-  <table class="projects-table">
-    <thead>
-      <tr>
-        <th>Project ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Location</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Students</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+    <table class="projects-table">
 
-    <tbody>
-      <tr *ngFor="let p of projects">
-        
-        <td>{{ p._id }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.description }}</td>
-        <td>{{ p.location }}</td>
-        <td>{{ p.startDate | date:'shortDate' }}</td>
-        <td>{{ p.endDate | date:'shortDate' }}</td>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th> <!-- ✅ NEW -->
+          <th>Location</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Students</th>
+          <th>Sensors</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-        <!-- ✅ STUDENT LIST -->
-        <td>
-          <div *ngIf="p.students?.length > 0; else noStudent">
+      <tbody>
+
+        <tr *ngFor="let p of projects">
+
+          <td>
+            <b>{{ p.name }}</b>
+            
+          </td>
+          
+<td>
+    <span class="desc">{{ p.description }}</span>
+  </td>
+
+
+          <td>{{ p.location }}</td>
+          <td>{{ p.startDate | date:'shortDate' }}</td>
+          <td>{{ p.endDate | date:'shortDate' }}</td>
+
+          <td>
             <span class="chip" *ngFor="let s of p.students">
               {{ s.name }}
             </span>
-          </div>
+          </td>
 
-          <ng-template #noStudent>
-            <span class="no-data">No Students</span>
-          </ng-template>
-        </td>
+          <td>
+            <span class="chip sensor" *ngFor="let s of p.sensors">
+              {{ s.deviceId }}
+            </span>
+          </td>
 
-        <!-- ✅ ACTION -->
-        <td>
-          <button (click)="openGraph(p._id)">📊 View</button>
-        </td>
+          <td class="actions">
+            <button class="edit" (click)="editProject(p)">✏️</button>
+            <button class="delete" (click)="deleteProject(p._id)">🗑️</button>
+            <button class="graph" (click)="openGraph(p._id)">📊</button>
+          </td>
 
-      </tr>
-    </tbody>
-  </table>
+        </tr>
 
+      </tbody>
+
+    </table>
+
+  </div>
 </div>
 
 
-<!-- ✅ MODAL -->
+<!-- MODAL -->
+
 <div class="modal-backdrop" *ngIf="showModal">
 
   <div class="modal">
 
-    <h3>➕ Create Project</h3>
+    <h2 class="title">
+      {{ editMode ? '✏️ Edit Project' : '➕ Create Project' }}
+    </h2>
 
-    <!-- BASIC INFO -->
-    <input [(ngModel)]="newProject.name" placeholder="Project Name">
-    <input [(ngModel)]="newProject.description" placeholder="Description">
-    <input [(ngModel)]="newProject.location" placeholder="Location">
-
-    <label>Start Date</label>
-    <input type="date" [(ngModel)]="newProject.startDate">
-
-    <label>End Date</label>
-    <input type="date" [(ngModel)]="newProject.endDate">
-
-    <!-- ✅ STUDENT + SENSOR SELECT -->
-    <div class="pair-section">
-      <select [(ngModel)]="newProject.studentId">
-        <option value="">Select Student</option>
-        <option *ngFor="let s of students" [value]="s._id">
-          {{ s.name }}
-        </option>
-      </select>
-
-      <select [(ngModel)]="newProject.sensorId">
-        <option value="">Select Sensor</option>
-        <option *ngFor="let s of sensors" [value]="s._id">
-          {{ s.deviceId }}
-        </option>
-      </select>
-
-      <button (click)="addPair()">➕ Add Pair</button>
+    <!-- ✅ INPUTS -->
+    <div class="form-group">
+      <input [(ngModel)]="newProject.name" placeholder="Project Name">
+      <input [(ngModel)]="newProject.description" placeholder="Description">
+      <input [(ngModel)]="newProject.location" placeholder="Location">
     </div>
 
-    <!-- ✅ PAIRS DISPLAY -->
-    <div class="pairs">
-      <div class="pair-chip" *ngFor="let p of pairs; let i = index">
-        👤 {{ p.studentName }} → 📡 {{ p.sensorName }}
-        <span (click)="removePair(i)">❌</span>
+    <!-- ✅ DATE -->
+    <div class="date-row">
+      <div>
+        <label>Start Date</label>
+        <input type="date" [(ngModel)]="newProject.startDate">
+      </div>
+      <div>
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="newProject.endDate">
       </div>
     </div>
 
-    <!-- ACTIONS -->
+    <!-- ✅ PAIR SECTION -->
+    <div class="pair-card">
+
+      <div class="pair-row">
+
+        <select [(ngModel)]="newProject.studentId">
+          <option value="">Select Student</option>
+
+          <option *ngFor="let s of students"
+                  [value]="s._id"
+                  [disabled]="isStudentUsed(s._id)">
+            {{ s.name }} {{ isStudentUsed(s._id) ? ' (Used)' : '' }}
+          </option>
+
+        </select>
+
+        <select [(ngModel)]="newProject.sensorId">
+          <option value="">Select Sensor</option>
+
+          <option *ngFor="let s of sensors"
+                  [value]="s._id"
+                  [disabled]="isSensorUsed(s._id)">
+            {{ s.deviceId }} {{ isSensorUsed(s._id) ? ' (Used)' : '' }}
+          </option>
+
+        </select>
+
+        <button class="add-btn" (click)="addPair()">+</button>
+
+      </div>
+
+      <!-- ✅ PAIRS -->
+      <div class="pairs">
+
+        <div class="pair-chip" *ngFor="let p of pairs; let i=index">
+          👤 {{ p.studentName }} → 📡 {{ p.sensorName }}
+          <span class="remove" (click)="removePair(i)">✖</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ✅ ACTIONS -->
     <div class="modal-actions">
-      <button (click)="createProject()">✅ Create</button>
-      <button (click)="closeModal()">Cancel</button>
+      <button class="save-btn" (click)="saveProject()">
+        {{ editMode ? 'Update' : 'Create' }}
+      </button>
+
+      <button class="cancel-btn" (click)="closeModal()">
+        Cancel
+      </button>
     </div>
 
   </div>
+
 </div>

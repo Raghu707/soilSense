@@ -1,36 +1,38 @@
 import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema({
+
   supervisorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
 
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
+
   description: String,
   location: String,
 
   startDate: Date,
-
-  
-// ✅ ADD THIS
-  studentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
-  },
-
-  // ✅ ADD THIS
-  sensorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Sensor",
-    required: true
-  },
-
-  // ✅ NEW FIELD
   endDate: Date,
 
-  // ✅ NEW FIELD
+  // ✅ MULTIPLE STUDENTS
+  students: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
+
+  // ✅ MULTIPLE SENSORS
+  sensors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Sensor"
+    }
+  ]
 
 }, { timestamps: true });
 

@@ -3,50 +3,58 @@ import User from "../models/User.js";
 import Sensor from "../models/Sensor.js";
 import SensorStudentMap from "../models/SensorUserMap.js";
 
+/* ================================
+   ✅ CREATE PROJECT
+================================ */
 export const createProject = async (req, res) => {
   try {
-    const { studentId, sensorId } = req.body;
+    const { name, students, sensors, description, location, startDate, endDate } = req.body;
 
-    // ✅ validate student
-    const student = await User.findById(studentId);
-    if (!student || student.role !== "student") {
-      return res.status(400).json({ message: "Invalid student" });
+    if (!name) {
+      return res.status(400).json({ message: "Project name required" });
     }
 
-    // ✅ validate sensor
-    const sensor = await Sensor.findById(sensorId);
-    if (!sensor) {
-      return res.status(400).json({ message: "Sensor not found" });
+    if (!students?.length) {
+      return res.status(400).json({ message: "Select at least one student" });
     }
 
-    // ✅ check if sensor already assigned
-    const existing = await SensorStudentMap.findOne({
-      sensorId
+    if (!sensors?.length) {
+      return res.status(400).json({ message: "Select at least one sensor" });
+    }
+
+    // ✅ VALIDATE STUDENTS
+    const validStudents = await User.find({
+      _id: { $in: students },
+      role: "student"
     });
 
-    if (existing) {
-      return res.status(400).json({
-        message: "Sensor already paired with a student"
-      });
+    if (validStudents.length !== students.length) {
+      return res.status(400).json({ message: "Invalid student(s)" });
     }
 
-    // ✅ CREATE PROJECT
+    // ✅ VALIDATE SENSORS
+    const validSensors = await Sensor.find({
+      _id: { $in: sensors }
+    });
+
+    if (validSensors.length !== sensors.length) {
+      return res.status(400).json({ message: "Invalid sensor(s)" });
+    }
+
     const project = await Project.create({
-      ...req.body,
-      supervisorId: req.user.id
-    });
-
-    // ✅ CREATE MAPPING 🔥
-    const mapping = await SensorStudentMap.create({
-      projectId: project._id,
-      studentId,
-      sensorId
+      name,
+      description,
+      location,
+      startDate,
+      endDate,
+      students,
+      sensors,
+      supervisorId: req.user?.id || null,
     });
 
     res.status(201).json({
-      message: "✅ Project + Mapping created successfully",
-      project,
-      mapping
+      message: "✅ Project created successfully",
+      project
     });
 
   } catch (error) {
@@ -55,77 +63,45 @@ export const createProject = async (req, res) => {
 };
 
 
-
-
-
 /* ================================
-   ✅ GET ALL PROJECTS (SORTED)
+   ✅ GET ALL PROJECTS
 ================================ */
 export const getProjects = async (req, res) => {
   try {
     const projects = await Project.find()
+      .populate("students", "name email")
+      .populate("sensors", "deviceId")
       .populate("supervisorId", "name email")
-      .sort({ createdAt: -1 }); // ✅ newest first
+      .sort({ createdAt: -1 });
 
-    const cleanProjects = projects.map(p => ({
-      _id: p._id,
-      name: p.name,
-      description: p.description,
-      location: p.location,
-      startDate: p.startDate,
-      endDate: p.endDate,
-      status: p.status,
-      supervisor: {
-        _id: p.supervisorId?._id,
-        name: p.supervisorId?.name,
-        email: p.supervisorId?.email
-      }
-    }));
-
-    res.json(cleanProjects);
+    res.json(projects);
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 /* ================================
-   ✅ GET SINGLE PROJECT
+   ✅ GET PROJECT BY ID
 ================================ */
 export const getProjectById = async (req, res) => {
   try {
-   const projects = await Project.find()
-  .populate("supervisorId", "name email")
-  .populate("studentId", "name email")   // ✅ NEW
-  .populate("sensorId")                  // ✅ NEW
-  .sort({ createdAt: -1 });
+    const project = await Project.findById(req.params.id)
+      .populate("students", "name email")
+      .populate("sensors", "deviceId")
+      .populate("supervisorId", "name email");
 
     if (!project) {
-      return res.status(404).json({ msg: "Project not found" });
+      return res.status(404).json({ message: "Project not found" });
     }
 
-    res.json({
-      _id: project._id,
-      name: project.name,
-      description: project.description,
-      location: project.location,
-      startDate: project.startDate,
-      endDate: project.endDate,
-      status: project.status,
-      supervisor: {
-        _id: project.supervisorId?._id,
-        name: project.supervisorId?.name,
-        email: project.supervisorId?.email
-      }
-    });
+    res.json(project);
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 /* ================================
@@ -133,31 +109,52 @@ export const getProjectById = async (req, res) => {
 ================================ */
 export const updateProject = async (req, res) => {
   try {
+    const { students, sensors } = req.body;
+
+    // ✅ OPTIONAL VALIDATION
+    if (students) {
+      const validStudents = await User.find({
+        _id: { $in: students },
+        role: "student"
+      });
+
+      if (validStudents.length !== students.length) {
+        return res.status(400).json({ message: "Invalid student(s)" });
+      }
+    }
+
+    if (sensors) {
+      const validSensors = await Sensor.find({
+        _id: { $in: sensors }
+      });
+
+      if (validSensors.length !== sensors.length) {
+        return res.status(400).json({ message: "Invalid sensor(s)" });
+      }
+    }
+
     const updated = await Project.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    );
+    )
+      .populate("students", "name email")
+      .populate("sensors", "deviceId")
+      .populate("supervisorId", "name email");
 
     if (!updated) {
-      return res.status(404).json({ msg: "Project not found" });
+      return res.status(404).json({ message: "Project not found" });
     }
 
     res.json({
-      _id: updated._id,
-      name: updated.name,
-      description: updated.description,
-      location: updated.location,
-      startDate: updated.startDate,
-      endDate: updated.endDate,
-      status: updated.status
+      message: "✅ Project updated",
+      project: updated
     });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 /* ================================
@@ -168,10 +165,15 @@ export const deleteProject = async (req, res) => {
     const deleted = await Project.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
-      return res.status(404).json({ msg: "Project not found" });
+      return res.status(404).json({ message: "Project not found" });
     }
 
-    res.json({ msg: "✅ Project deleted successfully" });
+    // ✅ Clean mapping
+    await SensorStudentMap.deleteMany({
+      projectId: req.params.id
+    });
+
+    res.json({ message: "✅ Project deleted successfully" });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
