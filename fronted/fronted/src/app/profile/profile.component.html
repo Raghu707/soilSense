@@ -1,0 +1,315 @@
+<div class="profile-container">
+
+  <h2>Profile</h2>
+
+  <p>
+    Your account and project assignment details.
+  </p>
+
+  <div class="grid">
+
+    <!-- LEFT CARD -->
+
+    <div class="card left">
+
+      <div class="avatar-wrapper">
+
+        <div class="circle">
+
+          {{ name ? name.charAt(0).toUpperCase() : 'U' }}
+
+        </div>
+
+        <div class="online-dot"></div>
+
+      </div>
+
+      <h3>{{ name }}</h3>
+
+      <span class="badge active">
+        ✅ Active
+      </span>
+
+      <!-- <button
+        class="profile-btn"
+        (click)="openEditModal()">
+
+        ✏️ Edit Profile
+
+      </button> -->
+
+      <button
+        class="profile-btn"
+        (click)="openPasswordModal()">
+
+        🔐 Change Password
+
+      </button>
+
+      <button
+        class="logout-btn"
+        (click)="logout()">
+
+        🚪 Sign Out
+
+      </button>
+
+    </div>
+
+    <!-- RIGHT CARD -->
+
+    <div class="card right">
+
+      <h4>ACCOUNT DETAILS</h4>
+
+      <div class="info-row">
+
+        <span class="label">
+          Username
+        </span>
+
+        <span class="value">
+
+          {{ name }}
+
+          <!-- <span
+            class="edit-icon"
+            (click)="openEditModal()">
+
+            ✏️
+
+          </span> -->
+
+        </span>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="label">
+          Email
+        </span>
+
+        <span class="value">
+
+          {{ email }}
+
+          <!-- <span
+            class="edit-icon"
+            (click)="openEditModal()">
+
+            ✏️
+
+          </span> -->
+
+        </span>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="label">
+          Role
+        </span>
+
+        <span class="value">
+          {{ role }}
+        </span>
+
+      </div>
+
+      <hr>
+
+      <h4>PROJECT DETAILS</h4>
+
+      <div class="info-row">
+
+        <span class="label">
+          Project
+        </span>
+
+        <span class="value">
+          {{ project }}
+        </span>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="label">
+          Sensor
+        </span>
+
+        <span class="value">
+          {{ sensor }}
+        </span>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="label">
+          Supervisor
+        </span>
+
+        <span class="value">
+          {{ supervisor }}
+        </span>
+
+      </div>
+
+      <hr>
+
+      <h4>STATISTICS</h4>
+
+      <div class="info-row">
+
+        <span class="label">
+          Observations
+        </span>
+
+        <span class="value">
+          {{ observationCount }}
+        </span>
+
+      </div>
+
+      <div class="info-row">
+
+        <span class="label">
+          Project Status
+        </span>
+
+        <span>
+
+          <span
+            class="badge active"
+            *ngIf="project !== 'Not Assigned'">
+
+            Assigned
+
+          </span>
+
+          <span
+            class="badge inactive"
+            *ngIf="project === 'Not Assigned'">
+
+            Not Assigned
+
+          </span>
+
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     EDIT PROFILE MODAL
+========================= -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showEditModal">
+
+  <div class="edit-modal">
+
+    <div class="modal-header">
+
+      <div class="modal-icon">
+        👤
+      </div>
+
+      <h3>Edit Profile</h3>
+
+    </div>
+
+    <input
+      [(ngModel)]="editUsername"
+      placeholder="Username">
+
+    <input
+      [(ngModel)]="editEmail"
+      placeholder="Email Address">
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-btn"
+        (click)="closeEditModal()">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="save-btn"
+        (click)="saveProfile()">
+
+        Save Changes
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     CHANGE PASSWORD MODAL
+========================= -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showPasswordModal">
+
+  <div class="edit-modal">
+
+    <div class="modal-header">
+
+      <div class="modal-icon">
+        🔐
+      </div>
+
+      <h3>Change Password</h3>
+
+    </div>
+
+    <input
+      type="password"
+      [(ngModel)]="newPassword"
+      placeholder="New Password">
+
+    <input
+      type="password"
+      [(ngModel)]="confirmPassword"
+      placeholder="Confirm Password">
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-btn"
+        (click)="closePasswordModal()">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="save-btn"
+        (click)="changePassword()">
+
+        Update Password
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

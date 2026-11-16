@@ -1,0 +1,125 @@
+<div class="layout">
+
+  <!-- MOBILE HEADER -->
+  <div class="mobile-header">
+    <button (click)="toggleSidebar()">☰</button>
+    <span>SoilSense</span>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div
+    class="sidebar"
+    [class.open]="isSidebarOpen">
+
+    <div class="top">
+
+      <div class="logo">
+        🌱 SoilSense
+      </div>
+
+      <ul>
+
+        <li *ngFor="let item of menu">
+
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="closeSidebar()">
+
+            {{ item.label }}
+
+          </a>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+  <!-- OVERLAY -->
+  <div
+    class="overlay"
+    *ngIf="isSidebarOpen"
+    (click)="closeSidebar()">
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+
+      <div class="topbar-left">
+
+        <h2>{{ pageTitle }}</h2>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <div
+          class="user-menu"
+          (click)="toggleDropdown()">
+
+          <div class="avatar">
+            {{ name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="user-info">
+
+            <div class="user-name">
+              {{ name }}
+            </div>
+
+            <div class="user-role">
+              {{ role | titlecase }}
+            </div>
+
+          </div>
+
+          <span class="arrow">
+            ▼
+          </span>
+
+          <div
+            class="dropdown"
+            *ngIf="dropdownOpen">
+
+            <div
+              class="dropdown-item"
+              (click)="goToProfile()">
+
+              👤 View Profile
+
+            </div>
+
+            <div
+              class="dropdown-item logout-item"
+              (click)="logout()">
+
+              🚪 Logout
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          class="logout-btn"
+          (click)="logout()">
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <router-outlet></router-outlet>
+
+  </div>
+
+</div>

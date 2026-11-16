@@ -1,0 +1,336 @@
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+
+  display: flex;
+
+  min-height: 100vh;
+
+  background: #f8fafc;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+
+  width: 260px;
+
+  background: #0f172a;
+
+  color: white;
+
+  padding: 24px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+}
+
+.sidebar h2 {
+
+  margin-bottom: 30px;
+
+  font-size: 26px;
+}
+
+.sidebar ul {
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+}
+
+.sidebar li {
+
+  padding: 14px 16px;
+
+  margin-bottom: 10px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: .25s;
+}
+
+.sidebar li:hover {
+
+  background: #1e293b;
+}
+
+.sidebar .active {
+
+  background: #22c55e;
+
+  color: white;
+
+  font-weight: 600;
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout {
+
+  border: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+
+  color: white;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: .3s;
+}
+
+.logout:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(239,68,68,.3);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 20px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 20px 25px;
+
+  margin-bottom: 25px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.05);
+}
+
+.topbar h2 {
+
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 26px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 20px;
+
+  flex: 1;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+
+  background: white;
+
+  padding: 24px;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.05);
+
+  transition: .3s;
+}
+
+.card:hover {
+
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.08);
+}
+
+.icon {
+
+  width: 60px;
+  height: 60px;
+
+  border-radius: 16px;
+
+  background: #eef2ff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 28px;
+
+  margin-bottom: 15px;
+}
+
+.card h3 {
+
+  color: #111827;
+
+  margin-bottom: 10px;
+}
+
+.card p {
+
+  color: #64748b;
+
+  line-height: 1.6;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1024px) {
+
+  .sidebar {
+
+    width: 220px;
+  }
+
+  .content {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .topbar h2 {
+
+    font-size: 22px;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .layout {
+
+    flex-direction: column;
+  }
+
+  .sidebar {
+
+    width: 100%;
+
+    padding: 15px;
+  }
+
+  .sidebar ul {
+
+    display: flex;
+
+    gap: 10px;
+
+    overflow-x: auto;
+
+    padding-bottom: 5px;
+  }
+
+  .sidebar li {
+
+    white-space: nowrap;
+
+    margin-bottom: 0;
+  }
+
+  .logout {
+
+    margin-top: 15px;
+  }
+
+  .main {
+
+    padding: 15px;
+  }
+
+  .content {
+
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+
+    padding: 18px;
+  }
+
+  .topbar h2 {
+
+    font-size: 20px;
+  }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .card {
+
+    padding: 20px;
+  }
+
+  .icon {
+
+    width: 50px;
+    height: 50px;
+
+    font-size: 24px;
+  }
+
+}

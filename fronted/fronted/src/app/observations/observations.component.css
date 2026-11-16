@@ -1,0 +1,353 @@
+/* =========================
+   PAGE
+========================= */
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 25px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container h2 {
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+input,
+select,
+textarea {
+
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #dbe2ea;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  background: white;
+
+  transition: .2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+
+  outline: none;
+
+  border-color: #22c55e;
+
+  box-shadow:
+    0 0 0 4px rgba(34,197,94,.12);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* =========================
+   WEATHER
+========================= */
+
+.weather {
+
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  margin-top: 5px;
+}
+
+.weather button {
+
+  padding: 12px 18px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #f1f5f9;
+
+  cursor: pointer;
+
+  transition: .25s;
+
+  font-weight: 600;
+}
+
+.weather button:hover {
+
+  transform: translateY(-2px);
+}
+
+.weather button.active {
+
+  background: #22c55e;
+
+  color: white;
+}
+
+/* =========================
+   SENSOR BOX
+========================= */
+
+.sensor-box {
+
+  margin-top: 25px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.06);
+}
+
+.sensor-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.sensor-header h3 {
+  margin: 0;
+}
+
+.sensor-header p {
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+/* =========================
+   FETCH BUTTON
+========================= */
+
+.fetch-btn {
+
+  border: none;
+
+  padding: 12px 18px;
+
+  border-radius: 12px;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  background:
+    linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+
+  transition: .3s;
+}
+
+.fetch-btn:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 20px rgba(34,197,94,.35);
+}
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.cards {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap: 18px;
+}
+
+.card {
+
+  background: #f8fafc;
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  text-align: center;
+
+  transition: .3s;
+}
+
+.card:hover {
+
+  transform: translateY(-3px);
+}
+
+.icon {
+
+  font-size: 30px;
+
+  margin-bottom: 10px;
+}
+
+.card p {
+
+  color: #64748b;
+
+  margin-bottom: 10px;
+}
+
+.card h3 {
+
+  color: #111827;
+
+  font-size: 26px;
+}
+
+.humidity {
+  background: #eff6ff;
+}
+
+.temperature {
+  background: #fff7ed;
+}
+
+.battery {
+  background: #ecfdf5;
+}
+
+/* =========================
+   SAVE BUTTON
+========================= */
+
+.actions {
+
+  margin-top: 25px;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save {
+
+  border: none;
+
+  color: white;
+
+  padding: 14px 25px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  background:
+    linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+
+  transition: .3s;
+}
+
+.save:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(34,197,94,.35);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 768px) {
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .fetch-btn {
+    width: 100%;
+  }
+
+  .actions .save {
+    width: 100%;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .container {
+    padding: 15px;
+  }
+
+  .weather {
+    flex-direction: column;
+  }
+
+  .weather button {
+    width: 100%;
+  }
+
+}

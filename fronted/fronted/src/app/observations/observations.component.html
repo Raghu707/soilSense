@@ -1,0 +1,186 @@
+<div class="container">
+
+  <h2>🌱 New Observation</h2>
+
+  <p class="subtitle">
+    Record field conditions and fetch live sensor data
+  </p>
+
+  <!-- TOP SECTION -->
+
+  <div class="grid">
+
+    <div>
+      <label>Project</label>
+      <input [value]="project" disabled>
+    </div>
+
+    <div>
+      <label>Date</label>
+      <input [value]="today | date:'short'" disabled>
+    </div>
+
+  </div>
+
+  <!-- LOCATION -->
+
+  <label>Location</label>
+
+  <input
+    [(ngModel)]="location"
+    placeholder="Plot A-3">
+
+  <!-- WEATHER -->
+
+  <label>Weather</label>
+
+  <div class="weather">
+
+    <button
+      (click)="weather='Sunny'"
+      [class.active]="weather==='Sunny'">
+
+      ☀️ Sunny
+
+    </button>
+
+    <button
+      (click)="weather='Cloudy'"
+      [class.active]="weather==='Cloudy'">
+
+      ☁️ Cloudy
+
+    </button>
+
+    <button
+      (click)="weather='Rain'"
+      [class.active]="weather==='Rain'">
+
+      🌧️ Rainy
+
+    </button>
+
+    <button
+      (click)="weather='Snow'"
+      [class.active]="weather==='Snow'">
+
+      ❄️ Snowy
+
+    </button>
+
+  </div>
+
+  <!-- WIND -->
+
+  <label>Wind</label>
+
+  <select [(ngModel)]="wind">
+
+    <option value="Calm">
+      🌿 Calm
+    </option>
+
+    <option value="Strong">
+      💨 Strong
+    </option>
+
+  </select>
+
+  <!-- SENSOR -->
+
+  <div class="sensor-box">
+
+    <div class="sensor-header">
+
+      <div>
+
+        <h3>📡 Live Sensor Reading</h3>
+
+        <p>
+          Fetch latest sensor values
+        </p>
+
+      </div>
+
+      <button
+        class="fetch-btn"
+        (click)="fetchSensor()">
+
+        {{ loading ? 'Fetching...' : 'Fetch Sensor' }}
+
+      </button>
+
+    </div>
+
+    <div class="cards">
+
+      <div class="card humidity">
+
+        <div class="icon">
+          💧
+        </div>
+
+        <p>Humidity</p>
+
+        <h3>
+          {{ sensor.humidity ?? '--' }}%
+        </h3>
+
+      </div>
+
+      <div class="card temperature">
+
+        <div class="icon">
+          🌡️
+        </div>
+
+        <p>Temperature</p>
+
+        <h3>
+          {{ sensor.temperatureC ?? '--' }}°C
+        </h3>
+
+      </div>
+
+      <div class="card battery">
+
+        <div class="icon">
+          🔋
+        </div>
+
+        <p>Battery</p>
+
+        <h3>
+          {{ sensor.battery ?? '--' }}%
+        </h3>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- NOTES -->
+
+  <label>Notes</label>
+
+  <textarea
+    [(ngModel)]="notes"
+    rows="5">
+  </textarea>
+
+  <!-- ACTION -->
+
+  <div class="actions">
+
+    <button
+      class="save"
+      (click)="save()">
+
+      ✅ Save Observation
+
+    </button>
+
+  </div>
+
+</div>

@@ -1,0 +1,93 @@
+<div class="page">
+
+  <h2>📊 Sensor Analytics</h2>
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <h3>💧 Humidity Trend</h3>
+
+      <div class="range">
+
+        <span
+          [class.active]="humidityRange === '24h'"
+          (click)="filterHumidity('24h')">
+          24 Hours
+        </span>
+
+        <span
+          [class.active]="humidityRange === '7d'"
+          (click)="filterHumidity('7d')">
+          7 Days
+        </span>
+
+        <span
+          [class.active]="humidityRange === '1m'"
+          (click)="filterHumidity('1m')">
+          1 Month
+        </span>
+
+        <span
+          [class.active]="humidityRange === 'all'"
+          (click)="filterHumidity('all')">
+          All Data
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="chart-wrapper">
+
+      <canvas id="moistureChart"></canvas>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <h3>🌡️ Temperature Trend</h3>
+
+      <div class="range">
+
+        <span
+          [class.active]="temperatureRange === '24h'"
+          (click)="filterTemperature('24h')">
+          24 Hours
+        </span>
+
+        <span
+          [class.active]="temperatureRange === '7d'"
+          (click)="filterTemperature('7d')">
+          7 Days
+        </span>
+
+        <span
+          [class.active]="temperatureRange === '1m'"
+          (click)="filterTemperature('1m')">
+          1 Month
+        </span>
+
+        <span
+          [class.active]="temperatureRange === 'all'"
+          (click)="filterTemperature('all')">
+          All Data
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="chart-wrapper">
+
+      <canvas id="tempChart"></canvas>
+
+    </div>
+
+  </div>
+
+</div>

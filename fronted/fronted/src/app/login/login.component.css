@@ -1,0 +1,772 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+/* ==========================
+   LOGIN PAGE
+========================== */
+
+.auth-wrapper{
+
+  min-height:100vh;
+
+  background:
+  linear-gradient(
+    rgba(0,0,0,.45),
+    rgba(0,0,0,.65)
+  ),
+  url("https://images.unsplash.com/photo-1500382017468-9049fed747ef");
+
+  background-size:cover;
+  background-position:center;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:20px;
+}
+
+.login-card{
+
+  width:430px;
+
+  background:
+  rgba(255,255,255,.12);
+
+  backdrop-filter:blur(16px);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  border-radius:28px;
+
+  padding:40px;
+
+  box-shadow:
+  0 25px 50px rgba(0,0,0,.35);
+
+  color:white;
+
+  animation:cardOpen .5s ease;
+}
+
+.logo-section{
+
+  text-align:center;
+
+  margin-bottom:25px;
+}
+
+.logo-section h1{
+
+  font-size:42px;
+
+  color:#8df53f;
+
+  margin-bottom:8px;
+}
+
+.logo-section p{
+
+  color:#f8fafc;
+
+  opacity:.9;
+}
+
+.login-card h2{
+
+  text-align:center;
+
+  margin-bottom:25px;
+
+  font-size:30px;
+}
+
+.form-group{
+
+  margin-bottom:18px;
+}
+
+.form-group label{
+
+  display:block;
+
+  margin-bottom:8px;
+
+  font-size:14px;
+
+  font-weight:600;
+}
+
+.form-group input{
+
+  width:100%;
+
+  height:50px;
+
+  border:none;
+
+  border-radius:14px;
+
+  padding:0 16px;
+
+  background:
+  rgba(255,255,255,.12);
+
+  color:white;
+
+  font-size:15px;
+}
+
+.form-group input::placeholder{
+
+  color:#e2e8f0;
+}
+
+.form-group input:focus{
+
+  outline:none;
+
+  border:1px solid #8df53f;
+}
+
+.password-container{
+
+  position:relative;
+}
+
+.eye-icon{
+
+  position:absolute;
+
+  top:13px;
+  right:18px;
+
+  cursor:pointer;
+
+  font-size:20px;
+}
+
+.options{
+
+  display:flex;
+  justify-content:flex-end;
+
+  margin-bottom:20px;
+}
+
+.forgot-link{
+
+  color:#8df53f;
+
+  text-decoration:none;
+
+  cursor:pointer;
+
+  font-size:14px;
+}
+
+.forgot-link:hover{
+
+  text-decoration:underline;
+}
+
+.login-btn{
+
+  width:100%;
+
+  height:52px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:
+  linear-gradient(
+  135deg,
+  #16a34a,
+  #22c55e
+  );
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+.login-btn:hover{
+
+  transform:translateY(-3px);
+
+  box-shadow:
+  0 15px 30px rgba(34,197,94,.35);
+}
+
+.login-btn:disabled{
+
+  opacity:.7;
+
+  cursor:not-allowed;
+}
+
+.register-link{
+
+  margin-top:20px;
+
+  text-align:center;
+
+  font-size:14px;
+}
+
+.register-link span{
+
+  color:#8df53f;
+
+  font-weight:600;
+
+  cursor:pointer;
+}
+
+/* ==========================
+   SPINNER
+========================== */
+
+.spinner{
+
+  display:inline-block;
+
+  width:22px;
+  height:22px;
+
+  border:
+  3px solid rgba(255,255,255,.3);
+
+  border-top:
+  3px solid white;
+
+  border-radius:50%;
+
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+
+  from{
+    transform:rotate(0);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* ==========================
+   FORGOT PASSWORD POPUP
+========================== */
+.modal-overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,.55);
+
+  backdrop-filter:blur(8px);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:20px;
+
+  overflow-y:auto;
+
+  z-index:9999;
+
+  animation:fadeIn .3s ease;
+}
+.forgot-modal{
+
+  width:100%;
+
+  max-width:650px;
+
+  background:white;
+
+  border-radius:30px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.25);
+
+  animation:popupOpen .35s ease;
+}
+.modal-header{
+
+  text-align:center;
+
+  padding:30px 30px 15px;
+}
+
+.icon-wrapper{
+
+  width:90px;
+  height:90px;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+  135deg,
+  #16a34a,
+  #22c55e
+  );
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  margin:auto;
+
+  font-size:34px;
+
+  color:white;
+
+  box-shadow:
+  0 15px 35px rgba(34,197,94,.35);
+}
+
+.modal-header h2{
+
+  color:#0f172a;
+
+  margin-top:18px;
+
+  font-size:30px;
+}
+
+.modal-header p{
+
+  color:#64748b;
+
+  margin-top:8px;
+}
+
+.modal-body{
+
+  padding:20px 30px;
+}
+
+.modal-body .form-group{
+
+  margin-bottom:18px;
+}
+
+.modal-body label{
+
+  color:#334155;
+
+  display:block;
+
+  margin-bottom:8px;
+
+  font-weight:600;
+}
+
+.modal-body input{
+
+  width:100%;
+
+  height:50px;
+
+  border:1px solid #dbe2ea;
+
+  border-radius:14px;
+
+  padding:0 15px;
+
+  font-size:14px;
+
+  color:#0f172a;
+
+  background:white;
+}
+
+.modal-body input:focus{
+
+  outline:none;
+
+  border-color:#16a34a;
+
+  box-shadow:
+  0 0 0 4px rgba(34,197,94,.15);
+}
+
+.modal-footer{
+
+  display:flex;
+
+  gap:12px;
+
+  padding:25px 30px;
+
+  border-top:1px solid #e5e7eb;
+}
+
+.modal-footer button{
+
+  flex:1;
+
+  height:52px;
+
+  border:none;
+
+  border-radius:14px;
+
+  font-size:15px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+.cancel-btn{
+
+  background:#f1f5f9;
+
+  color:#475569;
+}
+
+.cancel-btn:hover{
+
+  background:#e2e8f0;
+
+  transform:translateY(-2px);
+}
+
+.submit-btn{
+
+  color:white;
+
+  background:
+  linear-gradient(
+  135deg,
+  #16a34a,
+  #22c55e
+  );
+}
+
+.submit-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+  0 15px 25px rgba(34,197,94,.35);
+}
+
+/* ==========================
+   ANIMATIONS
+========================== */
+
+@keyframes popupOpen{
+
+  from{
+
+    opacity:0;
+
+    transform:
+    translateY(20px)
+    scale(.9);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:
+    translateY(0)
+    scale(1);
+  }
+}
+
+@keyframes fadeIn{
+
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes cardOpen{
+
+  from{
+
+    opacity:0;
+
+    transform:
+    translateY(30px);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:
+    translateY(0);
+  }
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+  .login-card{
+
+    width:100%;
+
+    padding:30px;
+  }
+
+  .forgot-modal{
+
+    width:95%;
+  }
+
+  .modal-footer{
+
+    flex-direction:column;
+  }
+}
+/* ==========================
+   RESPONSIVE
+========================== */
+
+/* LARGE TABLETS */
+@media (max-width: 1024px) {
+
+  .login-card{
+    width:100%;
+    max-width:460px;
+  }
+
+  .forgot-modal{
+    width:90%;
+    max-width:650px;
+  }
+
+}
+
+/* TABLETS */
+@media (max-width: 768px){
+
+  .auth-wrapper{
+    padding:20px;
+  }
+
+  .login-card{
+    width:100%;
+    max-width:500px;
+    padding:30px;
+    border-radius:24px;
+  }
+
+  .logo-section h1{
+    font-size:36px;
+  }
+
+  .login-card h2{
+    font-size:26px;
+  }
+
+  .forgot-modal{
+    width:95%;
+    max-width:600px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:24px;
+  }
+
+  .modal-header{
+    padding:30px 25px 15px;
+  }
+
+  .modal-body{
+    padding:20px 25px;
+  }
+
+  .modal-footer{
+    padding:20px 25px;
+    flex-direction:column;
+  }
+
+  .modal-footer button{
+    width:100%;
+  }
+
+}
+
+/* MOBILE */
+@media (max-width: 576px){
+
+  .auth-wrapper{
+    padding:15px;
+  }
+
+  .login-card{
+    width:100%;
+    padding:25px;
+    border-radius:20px;
+  }
+
+  .logo-section h1{
+    font-size:30px;
+  }
+
+  .logo-section p{
+    font-size:13px;
+  }
+
+  .login-card h2{
+    font-size:24px;
+  }
+
+  .form-group input{
+    height:48px;
+    font-size:14px;
+  }
+
+  .forgot-modal{
+    width:100%;
+    max-width:95%;
+    border-radius:20px;
+    max-height:92vh;
+    overflow-y:auto;
+  }
+
+  .icon-wrapper{
+    width:70px;
+    height:70px;
+    font-size:28px;
+  }
+
+  .modal-header h2{
+    font-size:24px;
+  }
+
+  .modal-header p{
+    font-size:14px;
+  }
+
+  .modal-body{
+    padding:15px 20px;
+  }
+
+  .modal-footer{
+    padding:20px;
+  }
+
+  .modal-body input{
+    height:48px;
+  }
+
+}
+
+/* SMALL MOBILE */
+@media (max-width: 400px){
+
+  .login-card{
+    padding:20px;
+  }
+
+  .logo-section h1{
+    font-size:26px;
+  }
+
+  .logo-section p{
+    font-size:12px;
+  }
+
+  .login-card h2{
+    font-size:22px;
+  }
+
+  .forgot-modal{
+    width:96%;
+    border-radius:18px;
+  }
+
+  .icon-wrapper{
+    width:60px;
+    height:60px;
+    font-size:24px;
+  }
+
+  .modal-header{
+    padding:20px 15px 10px;
+  }
+
+  .modal-header h2{
+    font-size:20px;
+  }
+
+  .modal-body{
+    padding:15px;
+  }
+
+  .modal-footer{
+    padding:15px;
+  }
+
+  .modal-body input{
+    height:46px;
+    font-size:14px;
+  }
+
+  .eye-icon{
+    top:12px;
+    right:12px;
+    font-size:18px;
+  }
+
+}
+
+/* LARGE DESKTOP */
+@media (min-width: 1400px){
+
+  .forgot-modal{
+    max-width:700px;
+  }
+
+  .modal-header{
+    padding:40px 40px 20px;
+  }
+
+  .modal-body{
+    padding:20px 40px;
+  }
+
+  .modal-footer{
+    padding:25px 40px;
+  }
+
+  .modal-body input{
+    height:56px;
+  }
+
+}

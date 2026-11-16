@@ -1,0 +1,155 @@
+<div class="layout">
+
+  <!-- SIDEBAR -->
+
+  <div class="sidebar">
+
+    <div>
+
+      <h2>🌱 SoilSense</h2>
+
+      <ul>
+
+        <li class="active">
+          📊 Dashboard
+        </li>
+
+        <li routerLink="/admin/projects">
+          📁 Projects
+        </li>
+
+        <li routerLink="/admin/students">
+          👨‍🎓 Students
+        </li>
+
+        <li routerLink="/admin/sensors">
+          📡 Sensors
+        </li>
+
+        <li>
+          📈 Overview
+        </li>
+
+      </ul>
+
+    </div>
+
+    <button
+      class="logout"
+      (click)="logout()">
+
+      🚪 Logout
+
+    </button>
+
+  </div>
+
+  <!-- MAIN -->
+
+  <div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+      <h2>
+
+        👋 Welcome Professor {{ name }}
+
+      </h2>
+
+    </div>
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+      <div class="card">
+
+        <div class="icon">
+          📁
+        </div>
+
+        <h3>All Projects</h3>
+
+        <p>
+          Manage all active projects and assignments.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon">
+          👨‍🎓
+        </div>
+
+        <h3>Manage Students</h3>
+
+        <p>
+          View students and monitor participation.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon">
+          📡
+        </div>
+
+        <h3>Sensor Overview</h3>
+
+        <p>
+          Monitor live sensor readings and status.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon">
+          📊
+        </div>
+
+        <h3>Analytics</h3>
+
+        <p>
+          View temperature and humidity trends.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon">
+          🌱
+        </div>
+
+        <h3>Field Observations</h3>
+
+        <p>
+          Review collected observations from students.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon">
+          ⚙️
+        </div>
+
+        <h3>System Status</h3>
+
+        <p>
+          Monitor platform activity and assignments.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

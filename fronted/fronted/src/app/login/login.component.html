@@ -1,0 +1,208 @@
+<div class="auth-wrapper">
+
+  <div class="login-card">
+
+    <div class="logo-section">
+
+      <h1>🌱 SoilSense</h1>
+
+      <p>
+        Smart Agriculture Monitoring Platform
+      </p>
+
+    </div>
+
+    <h2>Welcome Back</h2>
+
+    <div class="form-group">
+
+      <label>Username</label>
+
+      <input
+        [(ngModel)]="email"
+        type="text"
+        placeholder="Enter username">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Password</label>
+
+      <div class="password-container">
+
+        <input
+          [(ngModel)]="password"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Enter password">
+
+        <span
+          class="eye-icon"
+          (click)="togglePassword()">
+
+          {{ showPassword ? '🙈' : '👁️' }}
+
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="options">
+
+      <a
+        class="forgot-link"
+        (click)="openForgotPassword()">
+
+        Forgot Password?
+
+      </a>
+
+    </div>
+
+    <button
+      class="login-btn"
+      (click)="onLogin()"
+      [disabled]="loading">
+
+      <span *ngIf="!loading">
+        Login
+      </span>
+
+      <span
+        *ngIf="loading"
+        class="spinner">
+      </span>
+
+    </button>
+
+    <div class="register-link">
+
+      New to SoilSense?
+
+      <span routerLink="/register">
+        Create Account
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- FORGOT PASSWORD MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showForgotPassword">
+
+  <div class="forgot-modal">
+
+    <div class="modal-header">
+
+      <div class="icon-wrapper">
+        🔐
+      </div>
+
+      <h2>Reset Password</h2>
+
+      <p>
+        Update your account password securely
+      </p>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input
+          [(ngModel)]="forgotUsername"
+          type="text"
+          placeholder="Enter Username">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Email</label>
+
+        <input
+          [(ngModel)]="forgotEmail"
+          type="email"
+          placeholder="Enter Email">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>New Password</label>
+
+        <div class="password-container">
+
+          <input
+            [(ngModel)]="newPassword"
+            [type]="showNewPassword ? 'text' : 'password'"
+            placeholder="Enter New Password">
+
+          <span
+            class="eye-icon"
+            (click)="showNewPassword = !showNewPassword">
+
+            {{ showNewPassword ? '🙈' : '👁️' }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Repeat Password</label>
+
+        <div class="password-container">
+
+          <input
+            [(ngModel)]="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            placeholder="Repeat Password">
+
+          <span
+            class="eye-icon"
+            (click)="showConfirmPassword = !showConfirmPassword">
+
+            {{ showConfirmPassword ? '🙈' : '👁️' }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="cancel-btn"
+        (click)="closeForgotPassword()">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="submit-btn"
+        (click)="resetPassword()">
+
+        Update Password
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

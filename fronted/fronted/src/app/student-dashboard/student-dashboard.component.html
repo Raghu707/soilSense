@@ -1,0 +1,174 @@
+<div class="dashboard">
+
+  <h2 class="title">
+    👋 Welcome back, {{ name }}
+  </h2>
+
+  <p class="subtitle">
+    Log a new observation or review your past entries.
+  </p>
+
+  <div class="cards">
+
+    <div class="card project-card">
+
+      <div class="card-icon">
+        📁
+      </div>
+
+      <small>PROJECT</small>
+
+      <h3>{{ project }}</h3>
+
+      <p class="sub">
+        Assigned Project
+      </p>
+
+    </div>
+
+    <div class="card sensor-card">
+
+      <div class="card-icon">
+        📡
+      </div>
+
+      <small>SENSOR</small>
+
+      <h3>{{ sensor }}</h3>
+
+      <p class="sub">
+
+        {{ sensor === 'Not Assigned'
+          ? '🔴 No Sensor Assigned'
+          : '🟢 Sensor Connected' }}
+
+      </p>
+
+    </div>
+
+    <div class="card supervisor-card">
+
+      <div class="card-icon">
+        👨‍🏫
+      </div>
+
+      <small>SUPERVISOR</small>
+
+      <h3>{{ supervisor }}</h3>
+
+      <p class="sub">
+        Assigned Supervisor
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="table-header">
+
+    <h3>All Observations</h3>
+
+    <span class="count">
+
+      {{ observations.length }}
+      Observations
+
+    </span>
+
+  </div>
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Date & Time</th>
+          <th>Weather</th>
+          <th>Humidity</th>
+          <th>Temperature</th>
+          <th>Notes</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let o of observations">
+
+          <td>
+
+            <div class="date">
+
+              <b>{{ o.date }}</b>
+
+              <small>{{ o.time }}</small>
+
+            </div>
+
+          </td>
+
+          <td>
+
+            <span
+              class="tag">
+
+              {{ o.weather === 'sunny'
+                ? '☀️ Sunny'
+                : o.weather === 'cloudy'
+                ? '☁️ Cloudy'
+                : o.weather === 'rain'
+                ? '🌧️ Rainy'
+                : '❄️ Snowy' }}
+
+            </span>
+
+          </td>
+
+          <td>
+
+            <div class="progress">
+
+              <div
+                class="fill"
+                [style.width.%]="o.moisture">
+              </div>
+
+            </div>
+
+            <span>
+
+              {{ o.moisture }}%
+
+            </span>
+
+          </td>
+
+          <td>
+
+            <span class="temp">
+
+              🌡️ {{ o.temp }}°C
+
+            </span>
+
+          </td>
+
+          <td class="notes">
+
+            {{ o.notes }}
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

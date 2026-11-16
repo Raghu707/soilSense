@@ -1,0 +1,186 @@
+<div class="main">
+
+  <!-- HEADER -->
+
+  <div class="top-bar">
+
+    <div>
+
+      <h2>📡 Sensors</h2>
+
+      <p class="subtitle">
+        Manage all connected sensor devices
+      </p>
+
+    </div>
+
+    <button
+      class="add-btn"
+      (click)="openModal()">
+
+      ➕ Add Sensor
+
+    </button>
+
+  </div>
+
+  <!-- TABLE CARD -->
+
+  <div class="table-container">
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Device ID</th>
+            <th>Material</th>
+            <th>Metal</th>
+            <th>Battery</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let s of sensors">
+
+            <td class="device">
+
+              <div class="device-chip">
+                📡 {{ s.deviceId }}
+              </div>
+
+            </td>
+
+            <td>{{ s.materialDescription }}</td>
+
+            <td>{{ s.metalDescription }}</td>
+
+            <td>
+
+              <div class="battery-wrapper">
+
+                <div class="battery">
+
+                  <div
+                    class="level"
+                    [ngStyle]="{
+                      width: (s.battery || 0) + '%'
+                    }">
+                  </div>
+
+                </div>
+
+                <span class="battery-text">
+
+                  {{ s.battery || '-' }}%
+
+                </span>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <button
+                class="delete-btn"
+                (click)="deleteSensor(s._id)">
+
+                🗑 Delete
+
+              </button>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="sensors.length === 0">
+
+            <td
+              colspan="5"
+              class="no-data">
+
+              📭 No sensors available
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div
+  class="modal"
+  *ngIf="showModal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <div class="modal-icon">
+        📡
+      </div>
+
+      <h3>Add New Sensor</h3>
+
+      <p>
+        Register a new sensor device
+      </p>
+
+    </div>
+
+    <div class="form">
+
+      <input
+        [(ngModel)]="newSensor.deviceId"
+        placeholder="Device ID (e.g. SENSOR_001)">
+
+      <input
+        [(ngModel)]="newSensor.metalDescription"
+        placeholder="Metal Description">
+
+      <input
+        [(ngModel)]="newSensor.materialDescription"
+        placeholder="Material Description">
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="cancel"
+        (click)="closeModal()">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="save"
+        (click)="createSensor()">
+
+        ✅ Save
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
