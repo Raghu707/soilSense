@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 })
 export class StudentDashboardComponent implements OnInit {
 
-  API_URL = 'http://localhost:5000/api';
-
+  //API_URL = 'http://localhost:5000/api';
+ API_URL = 'https://soilsense-1-zp8c.onrender.com/api';
   name = 'Student';
 
   project = 'Not Assigned';
